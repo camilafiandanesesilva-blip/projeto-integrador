@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sensores de temperatura para medição do aquecimento da piscina - Projeto Sol+Água">
+    <title>6. Sensores de Temperatura | Projeto Sol+Água</title>
+    
+    <!-- VLibras - Acessibilidade em Libras (OBRIGATÓRIO) -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    
+    <style>
+        /* ============================================
+           VARIÁVEIS E RESET
+           ============================================ */
+        :root {
+            --cor-sol: #FF9F1C;
+            --cor-sol-escuro: #E87A00;
+            --cor-agua: #2EC4B6;
+            --cor-agua-escura: #1A9E92;
+            --cor-fundo: #F8F9FA;
+            --cor-fundo-card: #FFFFFF;
+            --cor-texto: #212529;
+            --cor-texto-secundario: #495057;
+            --cor-borda: #DEE2E6;
+            --fonte-padrao: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --tamanho-fonte: 1rem;
+            --espacamento-linha: 1.6;
+            --raio-borda: 12px;
+            --sombra: 0 4px 12px rgba(0,0,0,0.08);
+            --transicao: 0.3s ease;
+        }
+
+        /* Modo Alto Contraste */
+        body.alto-contraste {
+            --cor-sol: #FFD700;
+            --cor-sol-escuro: #FFA500;
+            --cor-agua: #00FFFF;
+            --cor-agua-escura: #00CED1;
+            --cor-fundo: #000000;
+            --cor-fundo-card: #1A1A1A;
+            --cor-texto: #FFFFFF;
+            --cor-texto-secundario: #FFFF00;
+            --cor-borda: #FFFFFF;
+        }
+
+        /* Modo Dislexia */
+        body.modo-dislexia {
+            --fonte-padrao: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif;
+            --tamanho-fonte: 1.15rem;
+            --espacamento-linha: 2;
+        }
+
+        /* Modo Fonte Grande */
+        body.fonte-grande {
+            --tamanho-fonte: 1.3rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--fonte-padrao);
+            font-size: var(--tamanho-fonte);
+            line-height: var(--espacamento-linha);
+            background: var(--cor-fundo);
+            color: var(--cor-texto);
+            transition: background var(--transicao), color var(--transicao);
+        }
+
+        /* ============================================
+           ACESSIBILIDADE - SKIP LINK
+           ============================================ */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--cor-sol);
+            color: #000;
+            padding: 8px 16px;
+            z-index: 1000;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* FOCO VISÍVEL (Obrigatório para navegação por teclado) */
+        *:focus {
+            outline: 3px solid var(--cor-sol);
+            outline-offset: 3px;
+        }
+
+        *:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        *:focus-visible {
+            outline: 3px solid var(--cor-sol);
+            outline-offset: 3px;
+        }
+
+        /* ============================================
+           CABEÇALHO E NAVEGAÇÃO
+           ============================================ */
+        header {
+            background: linear-gradient(135deg, var(--cor-sol) 0%, var(--cor-agua) 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--sombra);
+        }
+
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            opacity: 0.95;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            background: var(--cor-fundo-card);
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--cor-borda);
+        }
+
+        .breadcrumbs ol {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumbs li:not(:last-child)::after {
+            content: "›";
+            margin-left: 0.5rem;
+            color: var(--cor-texto-secundario);
+        }
+
+        .breadcrumbs a {
+            color: var(--cor-agua-escura);
+            text-decoration: none;
+        }
+
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+
+        /* Menu de Navegação */
+        nav.menu-principal {
+            background: var(--cor-fundo-card);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--sombra);
+        }
+
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav.menu-principal a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--cor-texto);
+            text-decoration: none;
+            border-radius: var(--raio-borda);
+            transition: background var(--transicao);
+            font-weight: 500;
+        }
+
+        nav.menu-principal a:hover,
+        nav.menu-principal a:focus {
+            background: var(--cor-agua);
+            color: white;
+        }
+
+        /* ============================================
+           LAYOUT PRINCIPAL
+           ============================================ */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            background: var(--cor-fundo-card);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: var(--raio-borda);
+            box-shadow: var(--sombra);
+            border-left: 5px solid var(--cor-sol);
+        }
+
+        section:nth-child(even) {
+            border-left-color: var(--cor-agua);
+        }
+
+        h2 {
+            color: var(--cor-sol-escuro);
+            margin-bottom: 1rem;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h2 .icone {
+            font-size: 1.5em;
+        }
+
+        h3 {
+            color: var(--cor-agua-escura);
+            margin: 1.5rem 0 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--cor-texto-secundario);
+        }
+
+        /* ============================================
+           BOTÃO LIBRAS
+           ============================================ */
+        .btn-libras {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--cor-agua);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--raio-borda);
+            cursor: pointer;
+            font-weight: bold;
+            margin: 1rem 0;
+            transition: transform var(--transicao), background var(--transicao);
+        }
+
+        .btn-libras:hover,
+        .btn-libras:focus {
+            background: var(--cor-agua-escura);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+           PAINEL DE ACESSIBILIDADE
+           ============================================ */
+        .acessibilidade-painel {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 999;
+        }
+
+        .acessibilidade-toggle {
+            background: var(--cor-sol);
+            color: #000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50% 0 0 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: var(--sombra);
+        }
+
+        .acessibilidade-menu {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--cor-fundo-card);
+            padding: 1rem;
+            border-radius: var(--raio-borda);
+            box-shadow: var(--sombra);
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 200px;
+        }
+
+        .acessibilidade-menu.aberto {
+            display: flex;
+        }
+
+        .acessibilidade-menu button {
+            background: var(--cor-fundo);
+            border: 2px solid var(--cor-borda);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all var(--transicao);
+        }
+
+        .acessibilidade-menu button:hover,
+        .acessibilidade-menu button:focus {
+            background: var(--cor-agua);
+            color: white;
+            border-color: var(--cor-agua);
+        }
+
+        /* ============================================
+           SIMULADORES
+           ============================================ */
+        .simulador-container {
+            background: linear-gradient(135deg, #f0f8ff 0%, #fff8e7 100%);
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            margin: 1.5rem 0;
+            border: 2px dashed var(--cor-agua);
+        }
+
+        body.alto-contraste .simulador-container {
+            background: #000;
+            border-color: var(--cor-agua);
+        }
+
+        canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 1rem auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+        }
+
+        body.alto-contraste canvas {
+            background: #111;
+        }
+
+        .controles-simulador {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controle-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .controle-grupo label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .valor-display {
+            background: var(--cor-sol);
+            color: #000;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* ============================================
+           CARDS DE CONCEITOS
+           ============================================ */
+        .grid-conceitos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card-conceito {
+            background: var(--cor-fundo);
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            border-top: 4px solid var(--cor-sol);
+            transition: transform var(--transicao);
+        }
+
+        .card-conceito:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-conceito h4 {
+            color: var(--cor-sol-escuro);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ============================================
+           TABELA COMPARATIVA
+           ============================================ */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--cor-fundo-card);
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        th {
+            background: var(--cor-agua);
+            color: white;
+        }
+
+        tr:hover {
+            background: var(--cor-fundo);
+        }
+
+        /* ============================================
+           RODAPÉ
+           ============================================ */
+        footer {
+            background: linear-gradient(135deg, var(--cor-agua-escura) 0%, var(--cor-sol-escuro) 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           RESPONSIVIDADE (MOBILE-FIRST)
+           ============================================ */
+        @media (max-width: 768px) {
+            section {
+                padding: 1.5rem 1rem;
+            }
+
+            nav.menu-principal ul {
+                flex-direction: column;
+            }
+
+            nav.menu-principal a {
+                text-align: center;
+            }
+
+            .acessibilidade-painel {
+                top: auto;
+                bottom: 20px;
+                right: 10px;
+                transform: none;
+            }
+
+            .acessibilidade-menu {
+                right: 60px;
+                top: auto;
+                bottom: 0;
+                transform: none;
+            }
+
+            input[type="range"] {
+                width: 150px;
+            }
+        }
+
+        /* Reduz movimento para quem prefere */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SKIP LINK - Acessibilidade -->
+    <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+
+    <!-- CABEÇALHO -->
+    <header role="banner">
+        <h1>🌊☀️ Sensores de Temperatura</h1>
+        <p>Como medir o aquecimento da água da piscina com precisão científica</p>
+    </header>
+
+    <!-- BREADCRUMBS -->
+    <nav class="breadcrumbs" aria-label="Caminho da página">
+        <ol>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Projeto Piscina</a></li>
+            <li><a href="#">Automação</a></li>
+            <li aria-current="page"><strong>6. Sensores de Temperatura</strong></li>
+        </ol>
+    </nav>
+
+    <!-- MENU PRINCIPAL -->
+    <nav class="menu-principal" aria-label="Navegação da seção">
+        <ul>
+            <li><a href="#fisica-sensor">1. Física do Sensor</a></li>
+            <li><a href="#mapeamento">2. Mapeamento</a></li>
+            <li><a href="#metricas">3. Métricas</a></li>
+            <li><a href="#dados">4. Análise de Dados</a></li>
+            <li><a href="#simuladores">5. Simuladores</a></li>
+        </ul>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main id="conteudo-principal" tabindex="-1">
+
+        <!-- SEÇÃO 1: FÍSICA DO SENSOR -->
+        <section id="fisica-sensor" aria-labelledby="titulo-fisica">
+            <h2 id="titulo-fisica"><span class="icone" aria-hidden="true">🔬</span> 1. Como um sensor transforma grandeza física em sinal elétrico?</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a física do sensor" onclick="abrirVideoLibras('fisica-sensor')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>Um sensor de temperatura é um <strong>transdutor</strong>: ele converte uma grandeza física (calor) em uma grandeza elétrica (tensão ou resistência) que o robô consegue "ler".</p>
+
+            <h3>A Física da Termorresistência (NTC)</h3>
+            <p>Em materiais semicondutores como os <strong>termistores NTC</strong> (Negative Temperature Coefficient), o aumento da temperatura agita os átomos da rede cristalina, liberando mais elétrons para conduzir corrente. Resultado: <strong>a resistência elétrica diminui quando a temperatura aumenta</strong>.</p>
+
+            <p>A relação é descrita pela equação de Steinhart-Hart:</p>
+            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
+                1/T = A + B·ln(R) + C·(ln(R))³
+            </p>
+
+            <h3>Do Sensor ao Robô: O Divisor de Tensão</h3>
+            <p>O microcontrolador (Arduino/ESP32) não mede resistência diretamente — ele lê <strong>tensão elétrica (0 a 5V)</strong>. Usamos um circuito divisor de tensão para converter a variação de resistência do sensor em variação de voltagem:</p>
+            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
+                V<sub>saída</sub> = V<sub>cc</sub> × R<sub>fixo</sub> / (R<sub>sensor</sub> + R<sub>fixo</sub>)
+            </p>
+
+            <div class="simulador-container">
+                <h3>🎬 Animação: Elétrons no Termistor NTC</h3>
+                <canvas id="canvasNTC" width="600" height="250" aria-label="Animação mostrando elétrons se movendo mais livremente conforme a temperatura aumenta" role="img"></canvas>
+                <div class="controles-simulador">
+                    <div class="controle-grupo">
+                        <label for="sliderTempNTC">Temperatura (°C):</label>
+                        <input type="range" id="sliderTempNTC" min="10" max="60" value="25" aria-valuenow="25" aria-valuemin="10" aria-valuemax="60">
+                    </div>
+                    <div class="valor-display" id="valorTempNTC" aria-live="polite">25°C</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: MAPEAMENTO -->
+        <section id="mapeamento" aria-labelledby="titulo-mapeamento">
+            <h2 id="titulo-mapeamento"><span class="icone" aria-hidden="true">🗺️</span> 2. Como medir a temperatura em diferentes pontos?</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre mapeamento térmico" onclick="abrirVideoLibras('mapeamento')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>A água quente é <strong>menos densa</strong> e tende a subir (convecção natural). Se medirmos apenas na superfície, teremos uma leitura falsa — a água do fundo pode estar vários graus mais fria!</p>
+
+            <h3>Solução Robótica: Sonda Vertical Multi-sensor</h3>
+            <p>Criamos uma <strong>sonda flutuante</strong> com 3 sensores DS18B20 posicionados em alturas diferentes:</p>
+            
+            <div class="grid-conceitos">
+                <div class="card-conceito">
+                    <h4>🔴 Superfície</h4>
+                    <p>Água mais quente (recebe radiação solar direta). Pode chegar a 32°C em dias ensolarados.</p>
+                </div>
+                <div class="card-conceito">
+                    <h4>🟡 Meio</h4>
+                    <p>Zona de transição térmica. Onde ocorre a maior estratificação.</p>
+                </div>
+                <div class="card-conceito">
+                    <h4>🔵 Fundo</h4>
+                    <p>Água mais fria (perde calor por condução com o solo). Tipicamente 2-4°C abaixo da superfície.</p>
+                </div>
+            </div>
+
+            <p>Os 3 sensores compartilham o mesmo barramento <strong>1-Wire</strong>, cada um com endereço único — economizando pinos do Arduino.</p>
+        </section>
+
+        <!-- SEÇÃO 3: MÉTRICAS -->
+        <section id="metricas" aria-labelledby="titulo-metricas">
+            <h2 id="titulo-metricas"><span class="icone" aria-hidden="true">📏</span> 3. Precisão, Resolução e Tempo de Resposta</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre métricas de sensores" onclick="abrirVideoLibras('metricas')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>Esses três conceitos são fundamentais para escolher o sensor certo:</p>
+
+            <table>
+                <caption style="caption-side:top; text-align:left; padding:0.5rem; font-weight:bold;">Comparativo de métricas de sensores</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Métrica</th>
+                        <th scope="col">Definição</th>
+                        <th scope="col">Analogia</th>
+                        <th scope="col">Exemplo DS18B20</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Precisão</strong></td>
+                        <td>Quão próximo do valor real</td>
+                        <td>Dardo acertando o alvo</td>
+                        <td>±0.5°C</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resolução</strong></td>
+                        <td>Menor variação detectável</td>
+                        <td>Régua milimetrada vs cm</td>
+                        <td>0.0625°C (12 bits)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tempo de Resposta</strong></td>
+                        <td>Velocidade para atingir equilíbrio térmico</td>
+                        <td>Termômetro clínico vs infravermelho</td>
+                        <td>~750ms (em água)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="simulador-container">
+                <h3>🎮 Laboratório Comparativo de Sensores</h3>
+                <p>Arraste o slider para mudar a temperatura real da água e observe como cada sensor responde:</p>
+                <canvas id="canvasComparacao" width="600" height="300" aria-label="Comparação visual entre três sensores com diferentes características" role="img"></canvas>
+                <div class="controles-simulador">
+                    <div class="controle-grupo">
+                        <label for="sliderTempReal">Temperatura Real da Água:</label>
+                        <input type="range" id="sliderTempReal" min="15" max="40" value="25" step="0.1" aria-valuenow="25">
+                    </div>
+                    <div class="valor-display" id="valorTempReal">25.0°C</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: ANÁLISE DE DADOS -->
+        <section id="dados" aria-labelledby="titulo-dados">
+            <h2 id="titulo-dados"><span class="icone" aria-hidden="true">🧠</span> 4. Como os dados indicam se o sistema está aquecendo?</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre análise de dados" onclick="abrirVideoLibras('dados')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>O robô não apenas lê temperatura — ele <strong>interpreta tendências</strong>. O algoritmo calcula o gradiente temporal:</p>
+
+            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
+                ΔT/Δt = (T<sub>atual</sub> - T<sub>anterior</sub>) / intervalo
+            </p>
+
+            <h3>Lógica de Decisão do Robô</h3>
+            <div class="grid-conceitos">
+                <div class="card-conceito" style="border-top-color:#4CAF50;">
+                    <h4>✅ Sistema AQUECENDO</h4>
+                    <p>Se <code>T_piscina ↑</code> E <code>T_coletor > T_piscina</code> → o coletor (corpo negro) está absorvendo radiação e transferindo calor. Bomba ligada.</p>
+                </div>
+                <div class="card-conceito" style="border-top-color:#f44336;">
+                    <h4>❌ Sistema ESFRIANDO</h4>
+                    <p>Se <code>T_piscina ↓</code> à noite → perda de radiação infravermelha para o céu. Robô aciona a capa térmica automaticamente.</p>
+                </div>
+                <div class="card-conceito" style="border-top-color:#2196F3;">
+                    <h4>⚖️ EQUILÍBRIO</h4>
+                    <p>Se <code>ΔT/Δt ≈ 0</code> → sistema estável. Robô entra em modo de monitoramento passivo, economizando energia.</p>
+                </div>
+            </div>
+
+            <p>Essa lógica integra todo o projeto: as <strong>ondas eletromagnéticas</strong> do sol aquecem o coletor (corpo negro), os <strong>painéis fotovoltaicos</strong> (efeito fotoelétrico) alimentam o robô, e os <strong>sensores</strong> garantem que a energia está sendo bem aproveitada.</p>
+        </section>
+
+        <!-- SEÇÃO 5: SIMULADORES -->
+        <section id="simuladores" aria-labelledby="titulo-simuladores">
+            <h2 id="titulo-simuladores"><span class="icone" aria-hidden="true">🎮</span> 5. Simulador Principal: Estratificação Térmica</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre o simulador" onclick="abrirVideoLibras('simuladores')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>Experimente como a estratificação térmica se comporta na piscina conforme você altera a intensidade do sol e a circulação da bomba:</p>
+
+            <div class="simulador-container">
+                <canvas id="canvasPiscina" width="700" height="400" aria-label="Simulação interativa da estratificação térmica de uma piscina" role="img"></canvas>
+                <div class="controles-simulador">
+                    <div class="controle-grupo">
+                        <label for="sliderSol">☀️ Intensidade do Sol:</label>
+                        <input type="range" id="sliderSol" min="0" max="100" value="70" aria-valuenow="70">
+                        <span class="valor-display" id="valorSol">70%</span>
+                    </div>
+                    <div class="controle-grupo">
+                        <label for="sliderBomba">💧 Bomba de Circulação:</label>
+                        <input type="range" id="sliderBomba" min="0" max="100" value="0" aria-valuenow="0">
+                        <span class="valor-display" id="valorBomba">Desligada</span>
+                    </div>
+                    <button class="btn-libras" onclick="resetarSimulador()" style="background:var(--cor-sol);">🔄 Resetar</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PAINEL DE ACESSIBILIDADE -->
+    <div class="acessibilidade-painel" role="region" aria-label="Configurações de acessibilidade">
+        <button class="acessibilidade-toggle" aria-label="Abrir menu de acessibilidade" aria-expanded="false" onclick="toggleAcessibilidade()">
+            ⚙️
+        </button>
+        <div class="acessibilidade-menu" id="menuAcessibilidade" role="menu">
+            <button role="menuitem" onclick="toggleAltoContraste()">🌓 Alto Contraste</button>
+            <button role="menuitem" onclick="toggleDislexia()">📖 Modo Dislexia</button>
+            <button role="menuitem" onclick="toggleFonteGrande()">🔍 Fonte Grande</button>
+            <button role="menuitem" onclick="lerTexto()">🔊 Ler Página em Voz Alta</button>
+        </div>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer role="contentinfo">
+        <p><strong>Projeto Sol+Água</strong> - Integração Tecnociência + Robótica</p>
+        <p>Ondas Eletromagnéticas • Corpo Negro • Efeito Fotoelétrico • Sensores</p>
+        <p>© 2026 - Código aberto sob licença MIT | <a href="#">GitHub do Projeto</a></p>
+    </footer>
+
+    <!-- INICIALIZAÇÃO VLIBRAS -->
+    <script>
+        window.addEventListener('load', function() {
+            if (window.VLibras) {
+                new window.VLibras.Widget('https://vlibras.gov.br/app');
+            }
+        });
+    </script>
+
+    <!-- SCRIPTS DO SITE -->
+    <script>
+        /* ============================================
+           ACESSIBILIDADE
+           ============================================ */
+        function toggleAcessibilidade() {
+            const menu = document.getElementById('menuAcessibilidade');
+            const btn = document.querySelector('.acessibilidade-toggle');
+            const aberto = menu.classList.toggle('aberto');
+            btn.setAttribute('aria-expanded', aberto);
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('alto-contraste');
+            localStorage.setItem('altoContraste', document.body.classList.contains('alto-contraste'));
+        }
+
+        function toggleDislexia() {
+            document.body.classList.toggle('modo-dislexia');
+            localStorage.setItem('modoDislexia', document.body.classList.contains('modo-dislexia'));
+        }
+
+        function toggleFonteGrande() {
+            document.body.classList.toggle('fonte-grande');
+            localStorage.setItem('fonteGrande', document.body.classList.contains('fonte-grande'));
+        }
+
+        function lerTexto() {
+            if ('speechSynthesis' in window) {
+                const texto = document.getElementById('conteudo-principal').innerText;
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'pt-BR';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Seu navegador não suporta leitura em voz alta.');
+            }
+        }
+
+        function abrirVideoLibras(secao) {
+            alert(`🤟 Aqui seria exibido um vídeo em Libras explicando a seção: ${secao}\n\n(Estrutura preparada para receber os vídeos reais em produção.)`);
+        }
+
+        // Restaurar preferências salvas
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('altoContraste') === 'true') document.body.classList.add('alto-contraste');
+            if (localStorage.getItem('modoDislexia') === 'true') document.body.classList.add('modo-dislexia');
+            if (localStorage.getItem('fonteGrande') === 'true') document.body.classList.add('fonte-grande');
+        });
+
+        /* ============================================
+           SIMULADOR 1: ANIMAÇÃO NTC
+           ============================================ */
+        const canvasNTC = document.getElementById('canvasNTC');
+        const ctxNTC = canvasNTC.getContext('2d');
+        const sliderTempNTC = document.getElementById('sliderTempNTC');
+        const valorTempNTC = document.getElementById('valorTempNTC');
+
+        let temperaturaNTC = 25;
+        let particulas = [];
+
+        // Criar partículas (elétrons)
+        for (let i = 0; i < 30; i++) {
+            particulas.push({
+                x: Math.random() * canvasNTC.width,
+                y: Math.random() * canvasNTC.height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                raio: 4
+            });
+        }
+
+        function desenharNTC() {
+            ctxNTC.clearRect(0, 0, canvasNTC.width, canvasNTC.height);
+            
+            // Fundo do material (rede cristalina)
+            const intensidadeCalor = (temperaturaNTC - 10) / 50;
+            const r = Math.floor(200 + intensidadeCalor * 55);
+            const g = Math.floor(200 - intensidadeCalor * 150);
+            const b = Math.floor(220 - intensidadeCalor * 180);
+            ctxNTC.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            ctxNTC.fillRect(0, 0, canvasNTC.width, canvasNTC.height);
+
+            // Rede cristalina (átomos fixos)
+            ctxNTC.fillStyle = 'rgba(50, 50, 50, 0.6)';
+            for (let x = 30; x < canvasNTC.width; x += 60) {
+                for (let y = 30; y < canvasNTC.height; y += 60) {
+                    const vibracao = intensidadeCalor * 3;
+                    const dx = (Math.random() - 0.5) * vibracao;
+                    const dy = (Math.random() - 0.5) * vibracao;
+                    ctxNTC.beginPath();
+                    ctxNTC.arc(x + dx, y + dy, 8, 0, Math.PI * 2);
+                    ctxNTC.fill();
+                }
+            }
+
+            // Elétrons livres (movem-se mais rápido com mais calor)
+            const velocidade = 1 + intensidadeCalor * 4;
+            particulas.forEach(p => {
+                p.x += p.vx * velocidade;
+                p.y += p.vy * velocidade;
+                
+                if (p.x < 0 || p.x > canvasNTC.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvasNTC.height) p.vy *= -1;
+
+                ctxNTC.fillStyle = '#FFD700';
+                ctxNTC.shadowColor = '#FFD700';
+                ctxNTC.shadowBlur = 10;
+                ctxNTC.beginPath();
+                ctxNTC.arc(p.x, p.y, p.raio, 0, Math.PI * 2);
+                ctxNTC.fill();
+                ctxNTC.shadowBlur = 0;
+            });
+
+            // Legenda
+            ctxNTC.fillStyle = 'rgba(0,0,0,0.8)';
+            ctxNTC.fillRect(10, 10, 220, 60);
+            ctxNTC.fillStyle = 'white';
+            ctxNTC.font = 'bold 14px sans-serif';
+            ctxNTC.fillText(`Temperatura: ${temperaturaNTC}°C`, 20, 30);
+            ctxNTC.font = '12px sans-serif';
+            ctxNTC.fillText('● Amarelo = elétrons livres', 20, 50);
+            ctxNTC.fillText('● Escuro = átomos da rede', 20, 65);
+
+            requestAnimationFrame(desenharNTC);
+        }
+
+        sliderTempNTC.addEventListener('input', (e) => {
+            temperaturaNTC = parseInt(e.target.value);
+            valorTempNTC.textContent = temperaturaNTC + '°C';
+            e.target.setAttribute('aria-valuenow', temperaturaNTC);
+        });
+
+        desenharNTC();
+
+        /* ============================================
+           SIMULADOR 2: COMPARAÇÃO DE SENSORES
+           ============================================ */
+        const canvasComp = document.getElementById('canvasComparacao');
+        const ctxComp = canvasComp.getContext('2d');
+        const sliderTempReal = document.getElementById('sliderTempReal');
+        const valorTempReal = document.getElementById('valorTempReal');
+
+        let tempReal = 25;
+        let sensores = [
+            { nome: 'Sensor Lento (Baixa Resolução)', leitura: 25, precisao: 1.0, inercia: 0.02, cor: '#f44336' },
+            { nome: 'Sensor Médio', leitura: 25, precisao: 0.5, inercia: 0.1, cor: '#FF9F1C' },
+            { nome: 'Sensor Rápido (Alta Resolução)', leitura: 25, precisao: 0.1, inercia: 0.3, cor: '#2EC4B6' }
+        ];
+
+        function desenharComparacao() {
+            ctxComp.clearRect(0, 0, canvasComp.width, canvasComp.height);
+            ctxComp.fillStyle = '#f8f9fa';
+            ctxComp.fillRect(0, 0, canvasComp.width, canvasComp.height);
+
+            // Atualizar leituras com inércia
+            sensores.forEach((s, i) => {
+                s.leitura += (tempReal - s.leitura) * s.inercia;
+                // Arredondar pela resolução
+                const leituraArred = Math.round(s.leitura / s.precisao) * s.precisao;
+                
+                const y = 60 + i * 80;
+                
+                // Barra de fundo
+                ctxComp.fillStyle = '#e0e0e0';
+                ctxComp.fillRect(250, y, 300, 40);
+                
+                // Barra do sensor
+                const largura = ((leituraArred - 10) / 35) * 300;
+                ctxComp.fillStyle = s.cor;
+                ctxComp.fillRect(250, y, Math.max(0, largura), 40);
+                
+                // Nome do sensor
+                ctxComp.fillStyle = '#212529';
+                ctxComp.font = 'bold 13px sans-serif';
+                ctxComp.textAlign = 'left';
+                ctxComp.fillText(s.nome, 10, y + 25);
+                
+                // Valor lido
+                ctxComp.fillStyle = 'white';
+                ctxComp.font = 'bold 16px sans-serif';
+                ctxComp.textAlign = 'center';
+                ctxComp.fillText(leituraArred.toFixed(1) + '°C', 400, y + 26);
+            });
+
+            // Linha da temperatura real
+            const xReal = 250 + ((tempReal - 10) / 35) * 300;
+            ctxComp.strokeStyle = '#000';
+            ctxComp.lineWidth = 2;
+            ctxComp.setLineDash([5, 5]);
+            ctxComp.beginPath();
+            ctxComp.moveTo(xReal, 40);
+            ctxComp.lineTo(xReal, 280);
+            ctxComp.stroke();
+            ctxComp.setLineDash([]);
+            
+            ctxComp.fillStyle = '#000';
+            ctxComp.font = 'bold 12px sans-serif';
+            ctxComp.textAlign = 'center';
+            ctxComp.fillText('TEMPERATURA REAL', xReal, 35);
+
+            // Escala
+            ctxComp.fillStyle = '#666';
+            ctxComp.font = '11px sans-serif';
+            ctxComp.textAlign = 'center';
+            for (let t = 10; t <= 45; t += 5) {
+                const x = 250 + ((t - 10) / 35) * 300;
+                ctxComp.fillText(t + '°C', x, 295);
+            }
+
+            requestAnimationFrame(desenharComparacao);
+        }
+
+        sliderTempReal.addEventListener('input', (e) => {
+            tempReal = parseFloat(e.target.value);
+            valorTempReal.textContent = tempReal.toFixed(1) + '°C';
+            e.target.setAttribute('aria-valuenow', tempReal);
+        });
+
+        desenharComparacao();
+
+        /* ============================================
+           SIMULADOR 3: ESTRATIFICAÇÃO DA PISCINA
+           ============================================ */
+        const canvasPiscina = document.getElementById('canvasPiscina');
+        const ctxPiscina = canvasPiscina.getContext('2d');
+        const sliderSol = document.getElementById('sliderSol');
+        const sliderBomba = document.getElementById('sliderBomba');
+        const valorSol = document.getElementById('valorSol');
+        const valorBomba = document.getElementById('valorBomba');
+
+        let intensidadeSol = 70;
+        let forcaBomba = 0;
+        let camadas = [];
+        const NUM_CAMADAS = 10;
+
+        // Inicializar camadas com temperatura ambiente
+        for (let i = 0; i < NUM_CAMADAS; i++) {
+            camadas.push(22); // 22°C inicial
+        }
+
+        function desenharPiscina() {
+            ctxPiscina.clearRect(0, 0, canvasPiscina.width, canvasPiscina.height);
+
+            // Céu
+            const gradCeu = ctxPiscina.createLinearGradient(0, 0, 0, 100);
+            const brilhoSol = intensidadeSol / 100;
+            gradCeu.addColorStop(0, `rgb(${135 + brilhoSol*50}, ${206 + brilhoSol*30}, ${235})`);
+            gradCeu.addColorStop(1, `rgb(${200 + brilhoSol*55}, ${230}, ${255})`);
+            ctxPiscina.fillStyle = gradCeu;
+            ctxPiscina.fillRect(0, 0, canvasPiscina.width, 100);
+
+            // Sol
+            const raioSol = 30 + brilhoSol * 20;
+            ctxPiscina.fillStyle = `rgba(255, ${180 + brilhoSol*75}, 0, ${0.5 + brilhoSol*0.5})`;
+            ctxPiscina.shadowColor = '#FFD700';
+            ctxPiscina.shadowBlur = 30 * brilhoSol;
+            ctxPiscina.beginPath();
+            ctxPiscina.arc(100, 60, raioSol, 0, Math.PI * 2);
+            ctxPiscina.fill();
+            ctxPiscina.shadowBlur = 0;
+
+            // Raios do sol
+            if (brilhoSol > 0.2) {
+                ctxPiscina.strokeStyle = `rgba(255, 200, 0, ${brilhoSol * 0.5})`;
+                ctxPiscina.lineWidth = 2;
+                for (let i = 0; i < 8; i++) {
+                    const angulo = (i / 8) * Math.PI * 2;
+                    ctxPiscina.beginPath();
+                    ctxPiscina.moveTo(100 + Math.cos(angulo) * (raioSol + 5), 60 + Math.sin(angulo) * (raioSol + 5));
+                    ctxPiscina.lineTo(100 + Math.cos(angulo) * (raioSol + 20), 60 + Math.sin(angulo) * (raioSol + 20));
+                    ctxPiscina.stroke();
+                }
+            }
+
+            // Piscina (bordas)
+            ctxPiscina.fillStyle = '#8B4513';
+            ctxPiscina.fillRect(100, 100, 500, 20);
+            ctxPiscina.fillRect(100, 100, 20, 280);
+            ctxPiscina.fillRect(580, 100, 20, 280);
+            ctxPiscina.fillRect(100, 380, 500, 20);
+
+            // Água por camadas
+            const alturaCamada = 260 / NUM_CAMADAS;
+            for (let i = 0; i < NUM_CAMADAS; i++) {
+                const temp = camadas[i];
+                // Cor baseada na temperatura (azul frio -> vermelho quente)
+                const t = Math.max(0, Math.min(1, (temp - 15) / 25));
+                const r = Math.floor(50 + t * 200);
+                const g = Math.floor(100 + (1 - Math.abs(t - 0.5) * 2) * 100);
+                const b = Math.floor(220 - t * 180);
+                ctxPiscina.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                ctxPiscina.fillRect(120, 120 + i * alturaCamada, 460, alturaCamada);
+
+                // Label de temperatura
+                ctxPiscina.fillStyle = 'white';
+                ctxPiscina.font = 'bold 11px sans-serif';
+                ctxPiscina.textAlign = 'right';
+                ctxPiscina.fillText(temp.toFixed(1) + '°C', 570, 120 + i * alturaCamada + alturaCamada/2 + 4);
+            }
+
+            // Simulação física
+            // Superfície aquece pelo sol
+            const aquecimento = intensidadeSol * 0.0003;
+            camadas[0] += aquecimento;
+            
+            // Perda de calor (radiação infravermelha) - mais forte nas camadas superiores
+            const perda = 0.001;
+            camadas.forEach((t, i) => {
+                camadas[i] -= perda * (1 - i/NUM_CAMADAS) * (t - 15);
+            });
+
+            // Convecção natural (água quente sobe)
+            for (let i = NUM_CAMADAS - 1; i > 0; i--) {
+                if (camadas[i] > camadas[i-1] + 0.1) {
+                    const diff = (camadas[i] - camadas[i-1]) * 0.01;
+                    camadas[i] -= diff;
+                    camadas[i-1] += diff;
+                }
+            }
+
+            // Bomba de circulação (mistura forçada)
+            if (forcaBomba > 0) {
+                const mistura = forcaBomba * 0.005;
+                let media = camadas.reduce((a, b) => a + b, 0) / NUM_CAMADAS;
+                camadas.forEach((t, i) => {
+                    camadas[i] += (media - t) * mistura;
+                });
+            }
+
+            // Limites
+            camadas = camadas.map(t => Math.max(10, Math.min(45, t)));
+
+            // Desenhar bomba
+            if (forcaBomba > 0) {
+                ctxPiscina.fillStyle = '#333';
+                ctxPiscina.fillRect(60, 200, 40, 60);
+                ctxPiscina.fillStyle = '#FF9F1C';
+                const rotacao = Date.now() / 100 * forcaBomba / 100;
+                ctxPiscina.save();
+                ctxPiscina.translate(80, 230);
+                ctxPiscina.rotate(rotacao);
+                ctxPiscina.fillRect(-15, -3, 30, 6);
+                ctxPiscina.fillRect(-3, -15, 6, 30);
+                ctxPiscina.restore();
+                
+                // Setas de circulação
+                ctxPiscina.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctxPiscina.lineWidth = 2;
+                const t = Date.now() / 500;
+                for (let i = 0; i < 3; i++) {
+                    const y = 150 + ((t * 30 + i * 80) % 240);
+                    ctxPiscina.beginPath();
+                    ctxPiscina.moveTo(150, y);
+                    ctxPiscina.lineTo(180, y);
+                    ctxPiscina.lineTo(175, y - 5);
+                    ctxPiscina.moveTo(180, y);
+                    ctxPiscina.lineTo(175, y + 5);
+                    ctxPiscina.stroke();
+                }
+            }
+
+            // Sensores (3 pontos)
+            const posicoesSensores = [0, Math.floor(NUM_CAMADAS/2), NUM_CAMADAS - 1];
+            const labelsSensores = ['Sup', 'Meio', 'Fun'];
+            posicoesSensores.forEach((pos, idx) => {
+                const y = 120 + pos * alturaCamada + alturaCamada/2;
+                ctxPiscina.fillStyle = '#000';
+                ctxPiscina.fillRect(130, y - 5, 10, 10);
+                ctxPiscina.fillStyle = 'white';
+                ctxPiscina.font = 'bold 10px sans-serif';
+                ctxPiscina.textAlign = 'left';
+                ctxPiscina.fillText(labelsSensores[idx], 145, y + 3);
+            });
+
+            // Legenda
+            ctxPiscina.fillStyle = 'rgba(0,0,0,0.7)';
+            ctxPiscina.fillRect(10, 10, 180, 80);
+            ctxPiscina.fillStyle = 'white';
+            ctxPiscina.font = 'bold 12px sans-serif';
+            ctxPiscina.textAlign = 'left';
+            ctxPiscina.fillText('🌡️ Sensores:', 20, 30);
+            ctxPiscina.font = '11px sans-serif';
+            ctxPiscina.fillText(`Sup: ${camadas[0].toFixed(1)}°C`, 20, 50);
+            ctxPiscina.fillText(`Meio: ${camadas[Math.floor(NUM_CAMADAS/2)].toFixed(1)}°C`, 20, 65);
+            ctxPiscina.fillText(`Fundo: ${camadas[NUM_CAMADAS-1].toFixed(1)}°C`, 20, 80);
+
+            requestAnimationFrame(desenharPiscina);
+        }
+
+        sliderSol.addEventListener('input', (e) => {
+            intensidadeSol = parseInt(e.target.value);
+            valorSol.textContent = intensidadeSol + '%';
+            e.target.setAttribute('aria-valuenow', intensidadeSol);
+        });
+
+        sliderBomba.addEventListener('input', (e) => {
+            forcaBomba = parseInt(e.target.value);
+            valorBomba.textContent = forcaBomba === 0 ? 'Desligada' : forcaBomba + '%';
+            e.target.setAttribute('aria-valuenow', forcaBomba);
+        });
+
+        function resetarSimulador() {
+            camadas = camadas.map(() => 22);
+            sliderSol.value = 70;
+            sliderBomba.value = 0;
+            intensidadeSol = 70;
+            forcaBomba = 0;
+            valorSol.textContent = '70%';
+            valorBomba.textContent = 'Desligada';
+        }
+
+        desenharPiscina();
+    </script>
+
+    <!-- Widget VLibras (oficial do governo) -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+</body>
+</html>
