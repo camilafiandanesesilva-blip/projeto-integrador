@@ -6,7 +6,7 @@
     <meta name="description" content="Sensores de temperatura para medição do aquecimento da piscina - Projeto Sol+Água">
     <title>6. Sensores de Temperatura | Projeto Sol+Água</title>
     
-    <!-- VLibras - Acessibilidade em Libras (OBRIGATÓRIO) -->
+    <!-- VLibras -->
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     
     <style>
@@ -23,12 +23,15 @@
             --cor-texto: #212529;
             --cor-texto-secundario: #495057;
             --cor-borda: #DEE2E6;
+            --cor-destaque: #FFF3CD;
             --fonte-padrao: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --tamanho-fonte: 1rem;
             --espacamento-linha: 1.6;
+            --espacamento-letras: 0px;
             --raio-borda: 12px;
             --sombra: 0 4px 12px rgba(0,0,0,0.08);
             --transicao: 0.3s ease;
+            --tamanho-cursor: auto;
         }
 
         /* Modo Alto Contraste */
@@ -42,6 +45,7 @@
             --cor-texto: #FFFFFF;
             --cor-texto-secundario: #FFFF00;
             --cor-borda: #FFFFFF;
+            --cor-destaque: #333300;
         }
 
         /* Modo Dislexia */
@@ -49,11 +53,47 @@
             --fonte-padrao: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif;
             --tamanho-fonte: 1.15rem;
             --espacamento-linha: 2;
+            --espacamento-letras: 1px;
         }
 
         /* Modo Fonte Grande */
         body.fonte-grande {
             --tamanho-fonte: 1.3rem;
+        }
+
+        /* Modo Fonte Extra Grande */
+        body.fonte-extra-grande {
+            --tamanho-fonte: 1.5rem;
+            --espacamento-linha: 1.9;
+        }
+
+        /* Daltonismo - Protanopia (vermelho) */
+        body.protanopia {
+            --cor-sol: #FFB000;
+            --cor-sol-escuro: #CC8800;
+            --cor-agua: #648FFF;
+            --cor-agua-escura: #4169E1;
+        }
+
+        /* Daltonismo - Deuteranopia (verde) */
+        body.deuteranopia {
+            --cor-sol: #E69F00;
+            --cor-sol-escuro: #B37700;
+            --cor-agua: #56B4E9;
+            --cor-agua-escura: #0072B2;
+        }
+
+        /* Daltonismo - Tritanopia (azul) */
+        body.tritanopia {
+            --cor-sol: #FF6B6B;
+            --cor-sol-escuro: #CC4444;
+            --cor-agua: #4ECDC4;
+            --cor-agua-escura: #26A69A;
+        }
+
+        /* Cursor Grande */
+        body.cursor-grande, body.cursor-grande * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="black" stroke="white" stroke-width="2" d="M4 0 L4 20 L9 15 L13 22 L16 20 L12 13 L19 13 Z"/></svg>') 0 0, auto;
         }
 
         * {
@@ -70,6 +110,7 @@
             font-family: var(--fonte-padrao);
             font-size: var(--tamanho-fonte);
             line-height: var(--espacamento-linha);
+            letter-spacing: var(--espacamento-letras);
             background: var(--cor-fundo);
             color: var(--cor-texto);
             transition: background var(--transicao), color var(--transicao);
@@ -94,7 +135,6 @@
             top: 0;
         }
 
-        /* FOCO VISÍVEL (Obrigatório para navegação por teclado) */
         *:focus {
             outline: 3px solid var(--cor-sol);
             outline-offset: 3px;
@@ -110,7 +150,7 @@
         }
 
         /* ============================================
-           CABEÇALHO E NAVEGAÇÃO
+           CABEÇALHO E HERO
            ============================================ */
         header {
             background: linear-gradient(135deg, var(--cor-sol) 0%, var(--cor-agua) 100%);
@@ -129,6 +169,123 @@
         header p {
             font-size: clamp(1rem, 2.5vw, 1.2rem);
             opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* HERO - Por que isso importa para sua piscina */
+        .hero-piscina {
+            background: linear-gradient(135deg, #fff8e7 0%, #e0f7fa 100%);
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--cor-agua);
+        }
+
+        body.alto-contraste .hero-piscina {
+            background: #111;
+        }
+
+        .hero-piscina h2 {
+            color: var(--cor-sol-escuro);
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            margin-bottom: 1rem;
+        }
+
+        .hero-piscina > p {
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            color: var(--cor-texto-secundario);
+        }
+
+        /* Infográfico do Ciclo */
+        .ciclo-aquecimento {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1100px;
+            margin: 2rem auto;
+        }
+
+        .etapa-ciclo {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            box-shadow: var(--sombra);
+            min-width: 180px;
+            max-width: 220px;
+            border-top: 5px solid var(--cor-sol);
+            text-align: center;
+            transition: transform var(--transicao);
+        }
+
+        body.alto-contraste .etapa-ciclo {
+            background: #1A1A1A;
+            border-color: var(--cor-sol);
+        }
+
+        .etapa-ciclo:hover {
+            transform: translateY(-8px);
+        }
+
+        .etapa-ciclo .icone-etapa {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .etapa-ciclo h3 {
+            color: var(--cor-sol-escuro);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .etapa-ciclo p {
+            font-size: 0.9rem;
+            color: var(--cor-texto-secundario);
+        }
+
+        .seta-ciclo {
+            font-size: 2rem;
+            color: var(--cor-agua);
+            font-weight: bold;
+        }
+
+        /* Cards de Impacto Real */
+        .impacto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 2rem auto;
+        }
+
+        .card-impacto {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            box-shadow: var(--sombra);
+            border-left: 5px solid var(--cor-agua);
+            text-align: left;
+        }
+
+        body.alto-contraste .card-impacto {
+            background: #1A1A1A;
+        }
+
+        .card-impacto .numero {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--cor-sol-escuro);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-impacto h4 {
+            color: var(--cor-agua-escura);
+            margin-bottom: 0.5rem;
         }
 
         /* Breadcrumbs */
@@ -245,9 +402,41 @@
             color: var(--cor-texto-secundario);
         }
 
-        /* ============================================
-           BOTÃO LIBRAS
-           ============================================ */
+        /* Caixa de Conexão com a Piscina */
+        .conexao-piscina {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe5b4 100%);
+            border: 2px solid var(--cor-sol);
+            border-radius: var(--raio-borda);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        body.alto-contraste .conexao-piscina {
+            background: #333;
+            border-color: var(--cor-sol);
+        }
+
+        .conexao-piscina::before {
+            content: "🏊 CONEXÃO COM A PISCINA";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--cor-sol);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .conexao-piscina h4 {
+            color: var(--cor-sol-escuro);
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Botão Libras */
         .btn-libras {
             display: inline-flex;
             align-items: center;
@@ -270,7 +459,7 @@
         }
 
         /* ============================================
-           PAINEL DE ACESSIBILIDADE
+           PAINEL DE ACESSIBILIDADE EXPANDIDO
            ============================================ */
         .acessibilidade-painel {
             position: fixed;
@@ -284,41 +473,56 @@
             background: var(--cor-sol);
             color: #000;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50% 0 0 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             box-shadow: var(--sombra);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .acessibilidade-menu {
             position: absolute;
-            right: 60px;
+            right: 70px;
             top: 50%;
             transform: translateY(-50%);
             background: var(--cor-fundo-card);
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: var(--raio-borda);
-            box-shadow: var(--sombra);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             display: none;
             flex-direction: column;
             gap: 0.5rem;
-            min-width: 200px;
+            min-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid var(--cor-borda);
         }
 
         .acessibilidade-menu.aberto {
             display: flex;
         }
 
+        .acessibilidade-menu h3 {
+            color: var(--cor-sol-escuro);
+            font-size: 1rem;
+            margin: 0.5rem 0 0.3rem;
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 0.3rem;
+        }
+
         .acessibilidade-menu button {
             background: var(--cor-fundo);
             border: 2px solid var(--cor-borda);
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem;
             border-radius: 8px;
             cursor: pointer;
             text-align: left;
             transition: all var(--transicao);
+            font-size: 0.95rem;
         }
 
         .acessibilidade-menu button:hover,
@@ -326,6 +530,31 @@
             background: var(--cor-agua);
             color: white;
             border-color: var(--cor-agua);
+        }
+
+        .acessibilidade-menu button.ativo {
+            background: var(--cor-sol);
+            color: #000;
+            border-color: var(--cor-sol-escuro);
+            font-weight: bold;
+        }
+
+        /* Guia de Leitura */
+        .guia-leitura {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(255, 215, 0, 0.3);
+            border-top: 2px solid var(--cor-sol);
+            border-bottom: 2px solid var(--cor-sol);
+            pointer-events: none;
+            z-index: 500;
+            display: none;
+        }
+
+        body.guia-ativo .guia-leitura {
+            display: block;
         }
 
         /* ============================================
@@ -394,9 +623,7 @@
             text-align: center;
         }
 
-        /* ============================================
-           CARDS DE CONCEITOS
-           ============================================ */
+        /* Cards de Conceitos */
         .grid-conceitos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -421,9 +648,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ============================================
-           TABELA COMPARATIVA
-           ============================================ */
+        /* Tabela */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -446,9 +671,99 @@
             background: var(--cor-fundo);
         }
 
-        /* ============================================
-           RODAPÉ
-           ============================================ */
+        /* Calculadora de Economia */
+        .calculadora {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 2rem;
+            border-radius: var(--raio-borda);
+            margin: 2rem 0;
+            border: 3px solid #4CAF50;
+        }
+
+        body.alto-contraste .calculadora {
+            background: #0a2e0a;
+            border-color: #4CAF50;
+        }
+
+        .calculadora h3 {
+            color: #2E7D32;
+            margin-top: 0;
+        }
+
+        body.alto-contraste .calculadora h3 {
+            color: #81C784;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .calc-grid label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .calc-grid input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--cor-borda);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .resultado-calc {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            margin-top: 1rem;
+            text-align: center;
+            border: 2px dashed #4CAF50;
+        }
+
+        body.alto-contraste .resultado-calc {
+            background: #1A1A1A;
+        }
+
+        .resultado-calc .valor-grande {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2E7D32;
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        body.alto-contraste .resultado-calc .valor-grande {
+            color: #81C784;
+        }
+
+        /* Atalhos de Teclado */
+        .atalhos-teclado {
+            background: var(--cor-fundo);
+            padding: 1rem;
+            border-radius: var(--raio-borda);
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .atalhos-teclado kbd {
+            background: #333;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 2px;
+        }
+
+        body.alto-contraste .atalhos-teclado kbd {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Rodapé */
         footer {
             background: linear-gradient(135deg, var(--cor-agua-escura) 0%, var(--cor-sol-escuro) 100%);
             color: white;
@@ -462,9 +777,7 @@
             text-decoration: underline;
         }
 
-        /* ============================================
-           RESPONSIVIDADE (MOBILE-FIRST)
-           ============================================ */
+        /* Responsividade */
         @media (max-width: 768px) {
             section {
                 padding: 1.5rem 1rem;
@@ -486,18 +799,22 @@
             }
 
             .acessibilidade-menu {
-                right: 60px;
+                right: 70px;
                 top: auto;
                 bottom: 0;
                 transform: none;
+                max-height: 70vh;
             }
 
             input[type="range"] {
                 width: 150px;
             }
+
+            .seta-ciclo {
+                transform: rotate(90deg);
+            }
         }
 
-        /* Reduz movimento para quem prefere */
         @media (prefers-reduced-motion: reduce) {
             * {
                 transition: none !important;
@@ -510,14 +827,87 @@
     </style>
 </head>
 <body>
-    <!-- SKIP LINK - Acessibilidade -->
     <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+
+    <!-- GUIA DE LEITURA -->
+    <div class="guia-leitura" aria-hidden="true"></div>
 
     <!-- CABEÇALHO -->
     <header role="banner">
         <h1>🌊☀️ Sensores de Temperatura</h1>
-        <p>Como medir o aquecimento da água da piscina com precisão científica</p>
+        <p>Como medir com precisão o aquecimento da sua piscina usando física e robótica</p>
     </header>
+
+    <!-- HERO - CONEXÃO COM A PISCINA -->
+    <section class="hero-piscina" aria-label="Introdução ao projeto">
+        <h2>🏊 Por que sensores são essenciais para sua piscina?</h2>
+        <p>
+            Imagine sua piscina aquecida por energia solar: o sol emite <strong>ondas eletromagnéticas</strong>, 
+            o coletor (comportamento de <strong>corpo negro</strong>) absorve essa radiação e aquece a água, 
+            enquanto os <strong>painéis fotovoltaicos</strong> (efeito fotoelétrico) alimentam o sistema. 
+            Mas <strong>como saber se a água está na temperatura ideal</strong>? É aí que entram os <strong>sensores</strong> — 
+            os "olhos térmicos" do robô que controla tudo.
+        </p>
+
+        <h3 style="text-align:center; color:var(--cor-agua-escura);">O Ciclo Completo do Aquecimento Inteligente</h3>
+        
+        <div class="ciclo-aquecimento" role="list" aria-label="Etapas do aquecimento da piscina">
+            <div class="etapa-ciclo" role="listitem">
+                <span class="icone-etapa" aria-hidden="true">☀️</span>
+                <h3>1. Sol</h3>
+                <p>Emite radiação visível e infravermelha (ondas EM)</p>
+            </div>
+            <div class="seta-ciclo" aria-hidden="true">→</div>
+            <div class="etapa-ciclo" role="listitem">
+                <span class="icone-etapa" aria-hidden="true">⚫</span>
+                <h3>2. Coletor</h3>
+                <p>Absorve radiação como corpo negro e aquece</p>
+            </div>
+            <div class="seta-ciclo" aria-hidden="true">→</div>
+            <div class="etapa-ciclo" role="listitem">
+                <span class="icone-etapa" aria-hidden="true">🌊</span>
+                <h3>3. Piscina</h3>
+                <p>Recebe água quente e emite IV à noite</p>
+            </div>
+            <div class="seta-ciclo" aria-hidden="true">→</div>
+            <div class="etapa-ciclo" role="listitem" style="border-top-color:var(--cor-agua);">
+                <span class="icone-etapa" aria-hidden="true">🌡️</span>
+                <h3>4. Sensores</h3>
+                <p>Medem a temperatura em 3 pontos</p>
+            </div>
+            <div class="seta-ciclo" aria-hidden="true">→</div>
+            <div class="etapa-ciclo" role="listitem" style="border-top-color:var(--cor-agua);">
+                <span class="icone-etapa" aria-hidden="true">🤖</span>
+                <h3>5. Robô</h3>
+                <p>Decide: liga bomba ou fecha capa térmica</p>
+            </div>
+        </div>
+
+        <h3 style="text-align:center; color:var(--cor-sol-escuro); margin-top:2rem;">💡 Impacto Real na Sua Piscina</h3>
+        
+        <div class="impacto-grid">
+            <div class="card-impacto">
+                <span class="numero">30%</span>
+                <h4>Economia de Energia</h4>
+                <p>Sensores precisos evitam aquecimento desnecessário, reduzindo o consumo da bomba de calor.</p>
+            </div>
+            <div class="card-impacto">
+                <span class="numero">2-4°C</span>
+                <h4>Diferença Real</h4>
+                <p>É a variação entre a superfície e o fundo de uma piscina sem circulação — medir só em cima engana!</p>
+            </div>
+            <div class="card-impacto">
+                <span class="numero">R$ 800+</span>
+                <h4>Economia/Ano</h4>
+                <p>Uma piscina residencial bem monitorada pode economizar centenas de reais por ano em energia.</p>
+            </div>
+            <div class="card-impacto">
+                <span class="numero">28°C</span>
+                <h4>Temperatura Ideal</h4>
+                <p>Conforto para banho. Abaixo de 25°C = frio. Acima de 30°C = desconfortável e favorece bactérias.</p>
+            </div>
+        </div>
+    </section>
 
     <!-- BREADCRUMBS -->
     <nav class="breadcrumbs" aria-label="Caminho da página">
@@ -537,11 +927,22 @@
             <li><a href="#metricas">3. Métricas</a></li>
             <li><a href="#dados">4. Análise de Dados</a></li>
             <li><a href="#simuladores">5. Simuladores</a></li>
+            <li><a href="#calculadora">6. Calculadora</a></li>
         </ul>
     </nav>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main id="conteudo-principal" tabindex="-1">
+
+        <!-- ATALHOS DE TECLADO -->
+        <div class="atalhos-teclado" role="region" aria-label="Atalhos de teclado">
+            <strong>⌨️ Atalhos de teclado:</strong>
+            <kbd>Alt</kbd>+<kbd>1</kbd> Alto Contraste |
+            <kbd>Alt</kbd>+<kbd>2</kbd> Guia de Leitura |
+            <kbd>Alt</kbd>+<kbd>3</kbd> Fonte Grande |
+            <kbd>Alt</kbd>+<kbd>4</kbd> Ler em Voz Alta |
+            <kbd>Alt</kbd>+<kbd>0</kbd> Menu Acessibilidade
+        </div>
 
         <!-- SEÇÃO 1: FÍSICA DO SENSOR -->
         <section id="fisica-sensor" aria-labelledby="titulo-fisica">
@@ -556,7 +957,6 @@
             <h3>A Física da Termorresistência (NTC)</h3>
             <p>Em materiais semicondutores como os <strong>termistores NTC</strong> (Negative Temperature Coefficient), o aumento da temperatura agita os átomos da rede cristalina, liberando mais elétrons para conduzir corrente. Resultado: <strong>a resistência elétrica diminui quando a temperatura aumenta</strong>.</p>
 
-            <p>A relação é descrita pela equação de Steinhart-Hart:</p>
             <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
                 1/T = A + B·ln(R) + C·(ln(R))³
             </p>
@@ -567,12 +967,25 @@
                 V<sub>saída</sub> = V<sub>cc</sub> × R<sub>fixo</sub> / (R<sub>sensor</sub> + R<sub>fixo</sub>)
             </p>
 
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 Por que isso importa para sua piscina?</h4>
+                <p>
+                    O sensor <strong>DS18B20</strong> é impermeável e ideal para ficar submerso na piscina. 
+                    Ele envia um <strong>sinal digital</strong> (protocolo 1-Wire), evitando ruídos causados pela umidade. 
+                    Quando a água esquenta, a resistência do termistor diminui, o robô lê essa mudança e sabe: 
+                    <em>"O coletor solar está funcionando! A piscina está aquecendo!"</em>
+                </p>
+                <p><strong>Exemplo real:</strong> Se a piscina está a 22°C e o coletor a 45°C, o robô liga a bomba para circular a água quente. Sem o sensor, ele não saberia quando agir.</p>
+            </div>
+
             <div class="simulador-container">
                 <h3>🎬 Animação: Elétrons no Termistor NTC</h3>
+                <p>Arraste o slider para ver como a temperatura afeta o movimento dos elétrons:</p>
                 <canvas id="canvasNTC" width="600" height="250" aria-label="Animação mostrando elétrons se movendo mais livremente conforme a temperatura aumenta" role="img"></canvas>
                 <div class="controles-simulador">
                     <div class="controle-grupo">
-                        <label for="sliderTempNTC">Temperatura (°C):</label>
+                        <label for="sliderTempNTC">Temperatura da Água (°C):</label>
                         <input type="range" id="sliderTempNTC" min="10" max="60" value="25" aria-valuenow="25" aria-valuemin="10" aria-valuemax="60">
                     </div>
                     <div class="valor-display" id="valorTempNTC" aria-live="polite">25°C</div>
@@ -590,20 +1003,32 @@
 
             <p>A água quente é <strong>menos densa</strong> e tende a subir (convecção natural). Se medirmos apenas na superfície, teremos uma leitura falsa — a água do fundo pode estar vários graus mais fria!</p>
 
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 O problema real da piscina</h4>
+                <p>
+                    Você já entrou numa piscina e sentiu a superfície quente mas o fundo gelado? 
+                    Isso é <strong>estratificação térmica</strong>. Em um dia de sol, a superfície pode estar a 32°C 
+                    enquanto o fundo está a 24°C — uma diferença de <strong>8°C</strong>! 
+                    Se o sensor medir só em cima, você vai achar que a piscina está ótima, mas quem entrar vai sentir frio.
+                </p>
+                <p><strong>Solução:</strong> Nosso robô usa 3 sensores em alturas diferentes para ter a "foto completa" da temperatura.</p>
+            </div>
+
             <h3>Solução Robótica: Sonda Vertical Multi-sensor</h3>
             <p>Criamos uma <strong>sonda flutuante</strong> com 3 sensores DS18B20 posicionados em alturas diferentes:</p>
             
             <div class="grid-conceitos">
                 <div class="card-conceito">
-                    <h4>🔴 Superfície</h4>
-                    <p>Água mais quente (recebe radiação solar direta). Pode chegar a 32°C em dias ensolarados.</p>
+                    <h4>🔴 Superfície (0-30cm)</h4>
+                    <p>Água mais quente (recebe radiação solar direta). Pode chegar a 32°C em dias ensolarados. É onde as pessoas nadam.</p>
                 </div>
                 <div class="card-conceito">
-                    <h4>🟡 Meio</h4>
-                    <p>Zona de transição térmica. Onde ocorre a maior estratificação.</p>
+                    <h4>🟡 Meio (80-100cm)</h4>
+                    <p>Zona de transição térmica. Onde ocorre a maior estratificação. Importante para conforto geral.</p>
                 </div>
                 <div class="card-conceito">
-                    <h4>🔵 Fundo</h4>
+                    <h4>🔵 Fundo (10-30cm do fundo)</h4>
                     <p>Água mais fria (perde calor por condução com o solo). Tipicamente 2-4°C abaixo da superfície.</p>
                 </div>
             </div>
@@ -627,31 +1052,42 @@
                     <tr>
                         <th scope="col">Métrica</th>
                         <th scope="col">Definição</th>
-                        <th scope="col">Analogia</th>
-                        <th scope="col">Exemplo DS18B20</th>
+                        <th scope="col">Exemplo na Piscina</th>
+                        <th scope="col">DS18B20</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>Precisão</strong></td>
                         <td>Quão próximo do valor real</td>
-                        <td>Dardo acertando o alvo</td>
+                        <td>Evita que o robô pense que está 28°C quando na verdade está 26°C</td>
                         <td>±0.5°C</td>
                     </tr>
                     <tr>
                         <td><strong>Resolução</strong></td>
                         <td>Menor variação detectável</td>
-                        <td>Régua milimetrada vs cm</td>
+                        <td>Permite notar que a piscina esquentou 0.1°C em 1 hora</td>
                         <td>0.0625°C (12 bits)</td>
                     </tr>
                     <tr>
                         <td><strong>Tempo de Resposta</strong></td>
-                        <td>Velocidade para atingir equilíbrio térmico</td>
-                        <td>Termômetro clínico vs infravermelho</td>
+                        <td>Velocidade para atingir equilíbrio</td>
+                        <td>Se for lento, o robô pode desligar o coletor cedo demais</td>
                         <td>~750ms (em água)</td>
                     </tr>
                 </tbody>
             </table>
+
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 Por que essas métricas importam?</h4>
+                <p>
+                    Imagine que a temperatura ideal da sua piscina é <strong>28°C</strong>. 
+                    Um sensor com <strong>baixa precisão</strong> (±1°C) pode marcar 28°C quando a água está a 27°C ou 29°C — 
+                    você toma um banho gelado sem saber. Já um sensor com <strong>alta resolução</strong> (0.0625°C) 
+                    permite que o robô detecte pequenas variações e mantenha a temperatura <strong>estável</strong>.
+                </p>
+            </div>
 
             <div class="simulador-container">
                 <h3>🎮 Laboratório Comparativo de Sensores</h3>
@@ -681,6 +1117,20 @@
                 ΔT/Δt = (T<sub>atual</sub> - T<sub>anterior</sub>) / intervalo
             </p>
 
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 O robô tomando decisões pela sua piscina</h4>
+                <p>
+                    O robô analisa os dados dos 3 sensores e toma decisões automáticas:
+                </p>
+                <ul style="margin-left:1.5rem; color:var(--cor-texto-secundario);">
+                    <li><strong>Dia de sol, piscina esquentando:</strong> mantém a bomba ligada circulando água pelo coletor</li>
+                    <li><strong>Noite, piscina esfriando:</strong> aciona a capa térmica para evitar perda de radiação infravermelha</li>
+                    <li><strong>Piscina na temperatura ideal (28°C):</strong> entra em modo de economia, desliga bomba</li>
+                    <li><strong>Superfície muito mais quente que o fundo:</strong> liga a bomba para homogeneizar</li>
+                </ul>
+            </div>
+
             <h3>Lógica de Decisão do Robô</h3>
             <div class="grid-conceitos">
                 <div class="card-conceito" style="border-top-color:#4CAF50;">
@@ -696,8 +1146,6 @@
                     <p>Se <code>ΔT/Δt ≈ 0</code> → sistema estável. Robô entra em modo de monitoramento passivo, economizando energia.</p>
                 </div>
             </div>
-
-            <p>Essa lógica integra todo o projeto: as <strong>ondas eletromagnéticas</strong> do sol aquecem o coletor (corpo negro), os <strong>painéis fotovoltaicos</strong> (efeito fotoelétrico) alimentam o robô, e os <strong>sensores</strong> garantem que a energia está sendo bem aproveitada.</p>
         </section>
 
         <!-- SEÇÃO 5: SIMULADORES -->
@@ -708,7 +1156,18 @@
                 🤟 Ver em Libras
             </button>
 
-            <p>Experimente como a estratificação térmica se comporta na piscina conforme você altera a intensidade do sol e a circulação da bomba:</p>
+            <p>Experimente como a estratificação térmica se comporta na <strong>sua piscina</strong> conforme você altera a intensidade do sol e a circulação da bomba:</p>
+
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 O que você vai aprender</h4>
+                <p>
+                    Este simulador mostra exatamente o que acontece na sua piscina: 
+                    <strong>sem a bomba</strong>, a água de cima esquenta muito e a de baixo fica fria (desconforto). 
+                    <strong>Com a bomba</strong>, a temperatura se uniformiza (conforto + economia). 
+                    É assim que o robô decide quando ligar a circulação!
+                </p>
+            </div>
 
             <div class="simulador-container">
                 <canvas id="canvasPiscina" width="700" height="400" aria-label="Simulação interativa da estratificação térmica de uma piscina" role="img"></canvas>
@@ -728,18 +1187,99 @@
             </div>
         </section>
 
+        <!-- SEÇÃO 6: CALCULADORA DE ECONOMIA -->
+        <section id="calculadora" aria-labelledby="titulo-calc">
+            <h2 id="titulo-calc"><span class="icone" aria-hidden="true">💰</span> 6. Calculadora de Economia</h2>
+            
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a calculadora" onclick="abrirVideoLibras('calculadora')">
+                🤟 Ver em Libras
+            </button>
+
+            <p>Descubra quanto você pode <strong>economizar</strong> usando sensores para otimizar o aquecimento da sua piscina:</p>
+
+            <div class="calculadora">
+                <h3>💡 Calcule sua economia anual</h3>
+                <p>Preencha os dados da sua piscina:</p>
+                
+                <div class="calc-grid">
+                    <div>
+                        <label for="calcVolume">Volume da piscina (m³):</label>
+                        <input type="number" id="calcVolume" value="30" min="5" max="200">
+                    </div>
+                    <div>
+                        <label for="calcTempDesejada">Temperatura desejada (°C):</label>
+                        <input type="number" id="calcTempDesejada" value="28" min="20" max="35">
+                    </div>
+                    <div>
+                        <label for="calcTempAmbiente">Temp. média ambiente (°C):</label>
+                        <input type="number" id="calcTempAmbiente" value="22" min="10" max="35">
+                    </div>
+                    <div>
+                        <label for="calcTarifa">Tarifa energia (R$/kWh):</label>
+                        <input type="number" id="calcTarifa" value="0.85" min="0.3" max="2" step="0.01">
+                    </div>
+                </div>
+
+                <button class="btn-libras" onclick="calcularEconomia()" style="background:#4CAF50; width:100%; justify-content:center;">
+                    💰 Calcular Economia
+                </button>
+
+                <div class="resultado-calc" id="resultadoCalc" style="display:none;">
+                    <p>Com sensores inteligentes, você pode economizar:</p>
+                    <span class="valor-grande" id="economiaAnual">R$ 0,00</span>
+                    <p><strong>por ano</strong> em energia elétrica!</p>
+                    <p style="margin-top:1rem; font-size:0.9rem;">
+                        Isso equivale a <strong id="equivalenciaCO2">0 kg</strong> de CO₂ não emitidos 🌱
+                    </p>
+                </div>
+            </div>
+
+            <!-- CONEXÃO COM A PISCINA -->
+            <div class="conexao-piscina">
+                <h4>🏊 Como os sensores geram essa economia?</h4>
+                <p>
+                    Sem sensores, uma bomba de calor pode ficar ligada <strong>desnecessariamente</strong>, 
+                    aquecendo água que já está quente ou mantendo temperatura quando a piscina não está em uso. 
+                    Com sensores precisos, o robô:
+                </p>
+                <ul style="margin-left:1.5rem; color:var(--cor-texto-secundario);">
+                    <li>Desliga a bomba quando atinge a temperatura ideal (evita superaquecimento)</li>
+                    <li>Fecha a capa térmica à noite (evita perda de calor por radiação infravermelha)</li>
+                    <li>Aproveita ao máximo o calor do coletor solar (corpo negro)</li>
+                    <li>Usa energia dos painéis fotovoltaicos (efeito fotoelétrico) de forma inteligente</li>
+                </ul>
+            </div>
+        </section>
+
     </main>
 
-    <!-- PAINEL DE ACESSIBILIDADE -->
+    <!-- PAINEL DE ACESSIBILIDADE EXPANDIDO -->
     <div class="acessibilidade-painel" role="region" aria-label="Configurações de acessibilidade">
         <button class="acessibilidade-toggle" aria-label="Abrir menu de acessibilidade" aria-expanded="false" onclick="toggleAcessibilidade()">
             ⚙️
         </button>
         <div class="acessibilidade-menu" id="menuAcessibilidade" role="menu">
-            <button role="menuitem" onclick="toggleAltoContraste()">🌓 Alto Contraste</button>
-            <button role="menuitem" onclick="toggleDislexia()">📖 Modo Dislexia</button>
-            <button role="menuitem" onclick="toggleFonteGrande()">🔍 Fonte Grande</button>
+            <h3>🎨 Visual</h3>
+            <button role="menuitem" onclick="toggleAltoContraste()" id="btnAltoContraste">🌓 Alto Contraste</button>
+            <button role="menuitem" onclick="toggleFonteGrande()" id="btnFonteGrande">🔍 Fonte Grande</button>
+            <button role="menuitem" onclick="toggleFonteExtraGrande()" id="btnFonteExtraGrande">🔎 Fonte Extra Grande</button>
+            <button role="menuitem" onclick="toggleGuiaLeitura()" id="btnGuiaLeitura">📏 Guia de Leitura</button>
+            <button role="menuitem" onclick="toggleCursorGrande()" id="btnCursorGrande">👆 Cursor Grande</button>
+            
+            <h3>📖 Leitura</h3>
+            <button role="menuitem" onclick="toggleDislexia()" id="btnDislexia">📖 Modo Dislexia</button>
             <button role="menuitem" onclick="lerTexto()">🔊 Ler Página em Voz Alta</button>
+            <button role="menuitem" onclick="pararLeitura()">⏹️ Parar Leitura</button>
+            
+            <h3>👁️ Daltonismo</h3>
+            <button role="menuitem" onclick="toggleDaltonismo('protanopia')" id="btnProtanopia">🔴 Protanopia</button>
+            <button role="menuitem" onclick="toggleDaltonismo('deuteranopia')" id="btnDeuteranopia">🟢 Deuteranopia</button>
+            <button role="menuitem" onclick="toggleDaltonismo('tritanopia')" id="btnTritanopia">🔵 Tritanopia</button>
+            <button role="menuitem" onclick="toggleDaltonismo(null)" id="btnNormal">✅ Cores Normais</button>
+            
+            <h3>⚙️ Outros</h3>
+            <button role="menuitem" onclick="mostrarAtalhos()">⌨️ Ver Atalhos</button>
+            <button role="menuitem" onclick="resetarAcessibilidade()">🔄 Resetar Tudo</button>
         </div>
     </div>
 
@@ -750,7 +1290,14 @@
         <p>© 2026 - Código aberto sob licença MIT | <a href="#">GitHub do Projeto</a></p>
     </footer>
 
-    <!-- INICIALIZAÇÃO VLIBRAS -->
+    <!-- VLibras -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
     <script>
         window.addEventListener('load', function() {
             if (window.VLibras) {
@@ -759,10 +1306,9 @@
         });
     </script>
 
-    <!-- SCRIPTS DO SITE -->
     <script>
         /* ============================================
-           ACESSIBILIDADE
+           ACESSIBILIDADE EXPANDIDA
            ============================================ */
         function toggleAcessibilidade() {
             const menu = document.getElementById('menuAcessibilidade');
@@ -773,41 +1319,193 @@
 
         function toggleAltoContraste() {
             document.body.classList.toggle('alto-contraste');
-            localStorage.setItem('altoContraste', document.body.classList.contains('alto-contraste'));
+            atualizarBotao('btnAltoContraste', document.body.classList.contains('alto-contraste'));
+            salvarPreferencias();
         }
 
         function toggleDislexia() {
             document.body.classList.toggle('modo-dislexia');
-            localStorage.setItem('modoDislexia', document.body.classList.contains('modo-dislexia'));
+            atualizarBotao('btnDislexia', document.body.classList.contains('modo-dislexia'));
+            salvarPreferencias();
         }
 
         function toggleFonteGrande() {
             document.body.classList.toggle('fonte-grande');
-            localStorage.setItem('fonteGrande', document.body.classList.contains('fonte-grande'));
+            document.body.classList.remove('fonte-extra-grande');
+            atualizarBotao('btnFonteGrande', document.body.classList.contains('fonte-grande'));
+            atualizarBotao('btnFonteExtraGrande', false);
+            salvarPreferencias();
+        }
+
+        function toggleFonteExtraGrande() {
+            document.body.classList.toggle('fonte-extra-grande');
+            document.body.classList.remove('fonte-grande');
+            atualizarBotao('btnFonteExtraGrande', document.body.classList.contains('fonte-extra-grande'));
+            atualizarBotao('btnFonteGrande', false);
+            salvarPreferencias();
+        }
+
+        function toggleGuiaLeitura() {
+            document.body.classList.toggle('guia-ativo');
+            atualizarBotao('btnGuiaLeitura', document.body.classList.contains('guia-ativo'));
+            salvarPreferencias();
+        }
+
+        function toggleCursorGrande() {
+            document.body.classList.toggle('cursor-grande');
+            atualizarBotao('btnCursorGrande', document.body.classList.contains('cursor-grande'));
+            salvarPreferencias();
+        }
+
+        function toggleDaltonismo(tipo) {
+            document.body.classList.remove('protanopia', 'deuteranopia', 'tritanopia');
+            if (tipo) {
+                document.body.classList.add(tipo);
+            }
+            atualizarBotao('btnProtanopia', tipo === 'protanopia');
+            atualizarBotao('btnDeuteranopia', tipo === 'deuteranopia');
+            atualizarBotao('btnTritanopia', tipo === 'tritanopia');
+            atualizarBotao('btnNormal', !tipo);
+            salvarPreferencias();
+        }
+
+        function atualizarBotao(id, ativo) {
+            const btn = document.getElementById(id);
+            if (btn) {
+                if (ativo) btn.classList.add('ativo');
+                else btn.classList.remove('ativo');
+            }
         }
 
         function lerTexto() {
             if ('speechSynthesis' in window) {
+                pararLeitura();
                 const texto = document.getElementById('conteudo-principal').innerText;
                 const utterance = new SpeechSynthesisUtterance(texto);
                 utterance.lang = 'pt-BR';
                 utterance.rate = 0.9;
+                window.utteranceAtual = utterance;
                 speechSynthesis.speak(utterance);
             } else {
                 alert('Seu navegador não suporta leitura em voz alta.');
             }
         }
 
+        function pararLeitura() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+        }
+
+        function mostrarAtalhos() {
+            alert('⌨️ ATALHOS DE TECLADO:\n\n' +
+                  'Alt + 1: Alto Contraste\n' +
+                  'Alt + 2: Guia de Leitura\n' +
+                  'Alt + 3: Fonte Grande\n' +
+                  'Alt + 4: Ler em Voz Alta\n' +
+                  'Alt + 0: Abrir Menu Acessibilidade\n' +
+                  'TAB: Navegar entre elementos\n' +
+                  'ENTER/ESPAÇO: Ativar botões');
+        }
+
+        function resetarAcessibilidade() {
+            document.body.className = '';
+            localStorage.removeItem('preferenciasAcessibilidade');
+            document.querySelectorAll('.acessibilidade-menu button').forEach(btn => btn.classList.remove('ativo'));
+        }
+
+        function salvarPreferencias() {
+            const prefs = {
+                altoContraste: document.body.classList.contains('alto-contraste'),
+                modoDislexia: document.body.classList.contains('modo-dislexia'),
+                fonteGrande: document.body.classList.contains('fonte-grande'),
+                fonteExtraGrande: document.body.classList.contains('fonte-extra-grande'),
+                guiaLeitura: document.body.classList.contains('guia-ativo'),
+                cursorGrande: document.body.classList.contains('cursor-grande'),
+                daltonismo: document.body.classList.contains('protanopia') ? 'protanopia' :
+                           document.body.classList.contains('deuteranopia') ? 'deuteranopia' :
+                           document.body.classList.contains('tritanopia') ? 'tritanopia' : null
+            };
+            localStorage.setItem('preferenciasAcessibilidade', JSON.stringify(prefs));
+        }
+
+        function carregarPreferencias() {
+            const prefs = JSON.parse(localStorage.getItem('preferenciasAcessibilidade') || '{}');
+            if (prefs.altoContraste) document.body.classList.add('alto-contraste');
+            if (prefs.modoDislexia) document.body.classList.add('modo-dislexia');
+            if (prefs.fonteGrande) document.body.classList.add('fonte-grande');
+            if (prefs.fonteExtraGrande) document.body.classList.add('fonte-extra-grande');
+            if (prefs.guiaLeitura) document.body.classList.add('guia-ativo');
+            if (prefs.cursorGrande) document.body.classList.add('cursor-grande');
+            if (prefs.daltonismo) document.body.classList.add(prefs.daltonismo);
+            
+            atualizarBotao('btnAltoContraste', prefs.altoContraste);
+            atualizarBotao('btnDislexia', prefs.modoDislexia);
+            atualizarBotao('btnFonteGrande', prefs.fonteGrande);
+            atualizarBotao('btnFonteExtraGrande', prefs.fonteExtraGrande);
+            atualizarBotao('btnGuiaLeitura', prefs.guiaLeitura);
+            atualizarBotao('btnCursorGrande', prefs.cursorGrande);
+            atualizarBotao('btnProtanopia', prefs.daltonismo === 'protanopia');
+            atualizarBotao('btnDeuteranopia', prefs.daltonismo === 'deuteranopia');
+            atualizarBotao('btnTritanopia', prefs.daltonismo === 'tritanopia');
+            atualizarBotao('btnNormal', !prefs.daltonismo);
+        }
+
+        window.addEventListener('load', carregarPreferencias);
+
+        // Guia de leitura segue o mouse
+        document.addEventListener('mousemove', (e) => {
+            if (document.body.classList.contains('guia-ativo')) {
+                const guia = document.querySelector('.guia-leitura');
+                guia.style.top = (e.clientY - 20) + 'px';
+            }
+        });
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey) {
+                switch(e.key) {
+                    case '1': toggleAltoContraste(); e.preventDefault(); break;
+                    case '2': toggleGuiaLeitura(); e.preventDefault(); break;
+                    case '3': toggleFonteGrande(); e.preventDefault(); break;
+                    case '4': lerTexto(); e.preventDefault(); break;
+                    case '0': toggleAcessibilidade(); e.preventDefault(); break;
+                }
+            }
+        });
+
         function abrirVideoLibras(secao) {
             alert(`🤟 Aqui seria exibido um vídeo em Libras explicando a seção: ${secao}\n\n(Estrutura preparada para receber os vídeos reais em produção.)`);
         }
 
-        // Restaurar preferências salvas
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('altoContraste') === 'true') document.body.classList.add('alto-contraste');
-            if (localStorage.getItem('modoDislexia') === 'true') document.body.classList.add('modo-dislexia');
-            if (localStorage.getItem('fonteGrande') === 'true') document.body.classList.add('fonte-grande');
-        });
+        /* ============================================
+           CALCULADORA DE ECONOMIA
+           ============================================ */
+        function calcularEconomia() {
+            const volume = parseFloat(document.getElementById('calcVolume').value);
+            const tempDesejada = parseFloat(document.getElementById('calcTempDesejada').value);
+            const tempAmbiente = parseFloat(document.getElementById('calcTempAmbiente').value);
+            const tarifa = parseFloat(document.getElementById('calcTarifa').value);
+
+            // Cálculo simplificado da energia necessária para aquecer
+            // Energia (kWh) = volume (m³) × 1000 (kg/m³) × 4.186 (cal/g°C) × ΔT / 860 (kcal/kWh) / 1000
+            const deltaT = tempDesejada - tempAmbiente;
+            const energiaDiaria = (volume * 1000 * 4.186 * deltaT) / 860000;
+            
+            // Perdas diárias estimadas (20% da energia)
+            const perdasDiarias = energiaDiaria * 0.2;
+            
+            // Economia com sensores (30% de redução nas perdas + otimização)
+            const economiaDiaria = perdasDiarias * 0.3 + energiaDiaria * 0.15;
+            const economiaAnual = economiaDiaria * 365 * tarifa;
+            
+            // CO₂ evitado (0.4 kg CO₂ por kWh no Brasil)
+            const co2Evitado = (economiaDiaria * 365) * 0.4;
+
+            document.getElementById('economiaAnual').textContent = 'R$ ' + economiaAnual.toFixed(2).replace('.', ',');
+            document.getElementById('equivalenciaCO2').textContent = co2Evitado.toFixed(0) + ' kg';
+            document.getElementById('resultadoCalc').style.display = 'block';
+        }
 
         /* ============================================
            SIMULADOR 1: ANIMAÇÃO NTC
@@ -820,7 +1518,6 @@
         let temperaturaNTC = 25;
         let particulas = [];
 
-        // Criar partículas (elétrons)
         for (let i = 0; i < 30; i++) {
             particulas.push({
                 x: Math.random() * canvasNTC.width,
@@ -834,7 +1531,6 @@
         function desenharNTC() {
             ctxNTC.clearRect(0, 0, canvasNTC.width, canvasNTC.height);
             
-            // Fundo do material (rede cristalina)
             const intensidadeCalor = (temperaturaNTC - 10) / 50;
             const r = Math.floor(200 + intensidadeCalor * 55);
             const g = Math.floor(200 - intensidadeCalor * 150);
@@ -842,7 +1538,6 @@
             ctxNTC.fillStyle = `rgb(${r}, ${g}, ${b})`;
             ctxNTC.fillRect(0, 0, canvasNTC.width, canvasNTC.height);
 
-            // Rede cristalina (átomos fixos)
             ctxNTC.fillStyle = 'rgba(50, 50, 50, 0.6)';
             for (let x = 30; x < canvasNTC.width; x += 60) {
                 for (let y = 30; y < canvasNTC.height; y += 60) {
@@ -855,7 +1550,6 @@
                 }
             }
 
-            // Elétrons livres (movem-se mais rápido com mais calor)
             const velocidade = 1 + intensidadeCalor * 4;
             particulas.forEach(p => {
                 p.x += p.vx * velocidade;
@@ -873,7 +1567,6 @@
                 ctxNTC.shadowBlur = 0;
             });
 
-            // Legenda
             ctxNTC.fillStyle = 'rgba(0,0,0,0.8)';
             ctxNTC.fillRect(10, 10, 220, 60);
             ctxNTC.fillStyle = 'white';
@@ -914,37 +1607,30 @@
             ctxComp.fillStyle = '#f8f9fa';
             ctxComp.fillRect(0, 0, canvasComp.width, canvasComp.height);
 
-            // Atualizar leituras com inércia
             sensores.forEach((s, i) => {
                 s.leitura += (tempReal - s.leitura) * s.inercia;
-                // Arredondar pela resolução
                 const leituraArred = Math.round(s.leitura / s.precisao) * s.precisao;
                 
                 const y = 60 + i * 80;
                 
-                // Barra de fundo
                 ctxComp.fillStyle = '#e0e0e0';
                 ctxComp.fillRect(250, y, 300, 40);
                 
-                // Barra do sensor
                 const largura = ((leituraArred - 10) / 35) * 300;
                 ctxComp.fillStyle = s.cor;
                 ctxComp.fillRect(250, y, Math.max(0, largura), 40);
                 
-                // Nome do sensor
                 ctxComp.fillStyle = '#212529';
                 ctxComp.font = 'bold 13px sans-serif';
                 ctxComp.textAlign = 'left';
                 ctxComp.fillText(s.nome, 10, y + 25);
                 
-                // Valor lido
                 ctxComp.fillStyle = 'white';
                 ctxComp.font = 'bold 16px sans-serif';
                 ctxComp.textAlign = 'center';
                 ctxComp.fillText(leituraArred.toFixed(1) + '°C', 400, y + 26);
             });
 
-            // Linha da temperatura real
             const xReal = 250 + ((tempReal - 10) / 35) * 300;
             ctxComp.strokeStyle = '#000';
             ctxComp.lineWidth = 2;
@@ -960,7 +1646,6 @@
             ctxComp.textAlign = 'center';
             ctxComp.fillText('TEMPERATURA REAL', xReal, 35);
 
-            // Escala
             ctxComp.fillStyle = '#666';
             ctxComp.font = '11px sans-serif';
             ctxComp.textAlign = 'center';
@@ -995,15 +1680,13 @@
         let camadas = [];
         const NUM_CAMADAS = 10;
 
-        // Inicializar camadas com temperatura ambiente
         for (let i = 0; i < NUM_CAMADAS; i++) {
-            camadas.push(22); // 22°C inicial
+            camadas.push(22);
         }
 
         function desenharPiscina() {
             ctxPiscina.clearRect(0, 0, canvasPiscina.width, canvasPiscina.height);
 
-            // Céu
             const gradCeu = ctxPiscina.createLinearGradient(0, 0, 0, 100);
             const brilhoSol = intensidadeSol / 100;
             gradCeu.addColorStop(0, `rgb(${135 + brilhoSol*50}, ${206 + brilhoSol*30}, ${235})`);
@@ -1011,7 +1694,6 @@
             ctxPiscina.fillStyle = gradCeu;
             ctxPiscina.fillRect(0, 0, canvasPiscina.width, 100);
 
-            // Sol
             const raioSol = 30 + brilhoSol * 20;
             ctxPiscina.fillStyle = `rgba(255, ${180 + brilhoSol*75}, 0, ${0.5 + brilhoSol*0.5})`;
             ctxPiscina.shadowColor = '#FFD700';
@@ -1021,7 +1703,6 @@
             ctxPiscina.fill();
             ctxPiscina.shadowBlur = 0;
 
-            // Raios do sol
             if (brilhoSol > 0.2) {
                 ctxPiscina.strokeStyle = `rgba(255, 200, 0, ${brilhoSol * 0.5})`;
                 ctxPiscina.lineWidth = 2;
@@ -1034,18 +1715,15 @@
                 }
             }
 
-            // Piscina (bordas)
             ctxPiscina.fillStyle = '#8B4513';
             ctxPiscina.fillRect(100, 100, 500, 20);
             ctxPiscina.fillRect(100, 100, 20, 280);
             ctxPiscina.fillRect(580, 100, 20, 280);
             ctxPiscina.fillRect(100, 380, 500, 20);
 
-            // Água por camadas
             const alturaCamada = 260 / NUM_CAMADAS;
             for (let i = 0; i < NUM_CAMADAS; i++) {
                 const temp = camadas[i];
-                // Cor baseada na temperatura (azul frio -> vermelho quente)
                 const t = Math.max(0, Math.min(1, (temp - 15) / 25));
                 const r = Math.floor(50 + t * 200);
                 const g = Math.floor(100 + (1 - Math.abs(t - 0.5) * 2) * 100);
@@ -1053,25 +1731,20 @@
                 ctxPiscina.fillStyle = `rgb(${r}, ${g}, ${b})`;
                 ctxPiscina.fillRect(120, 120 + i * alturaCamada, 460, alturaCamada);
 
-                // Label de temperatura
                 ctxPiscina.fillStyle = 'white';
                 ctxPiscina.font = 'bold 11px sans-serif';
                 ctxPiscina.textAlign = 'right';
                 ctxPiscina.fillText(temp.toFixed(1) + '°C', 570, 120 + i * alturaCamada + alturaCamada/2 + 4);
             }
 
-            // Simulação física
-            // Superfície aquece pelo sol
             const aquecimento = intensidadeSol * 0.0003;
             camadas[0] += aquecimento;
             
-            // Perda de calor (radiação infravermelha) - mais forte nas camadas superiores
             const perda = 0.001;
             camadas.forEach((t, i) => {
                 camadas[i] -= perda * (1 - i/NUM_CAMADAS) * (t - 15);
             });
 
-            // Convecção natural (água quente sobe)
             for (let i = NUM_CAMADAS - 1; i > 0; i--) {
                 if (camadas[i] > camadas[i-1] + 0.1) {
                     const diff = (camadas[i] - camadas[i-1]) * 0.01;
@@ -1080,7 +1753,6 @@
                 }
             }
 
-            // Bomba de circulação (mistura forçada)
             if (forcaBomba > 0) {
                 const mistura = forcaBomba * 0.005;
                 let media = camadas.reduce((a, b) => a + b, 0) / NUM_CAMADAS;
@@ -1089,10 +1761,8 @@
                 });
             }
 
-            // Limites
             camadas = camadas.map(t => Math.max(10, Math.min(45, t)));
 
-            // Desenhar bomba
             if (forcaBomba > 0) {
                 ctxPiscina.fillStyle = '#333';
                 ctxPiscina.fillRect(60, 200, 40, 60);
@@ -1105,7 +1775,6 @@
                 ctxPiscina.fillRect(-3, -15, 6, 30);
                 ctxPiscina.restore();
                 
-                // Setas de circulação
                 ctxPiscina.strokeStyle = 'rgba(255, 255, 255, 0.7)';
                 ctxPiscina.lineWidth = 2;
                 const t = Date.now() / 500;
@@ -1121,7 +1790,6 @@
                 }
             }
 
-            // Sensores (3 pontos)
             const posicoesSensores = [0, Math.floor(NUM_CAMADAS/2), NUM_CAMADAS - 1];
             const labelsSensores = ['Sup', 'Meio', 'Fun'];
             posicoesSensores.forEach((pos, idx) => {
@@ -1134,7 +1802,6 @@
                 ctxPiscina.fillText(labelsSensores[idx], 145, y + 3);
             });
 
-            // Legenda
             ctxPiscina.fillStyle = 'rgba(0,0,0,0.7)';
             ctxPiscina.fillRect(10, 10, 180, 80);
             ctxPiscina.fillStyle = 'white';
@@ -1173,13 +1840,5 @@
 
         desenharPiscina();
     </script>
-
-    <!-- Widget VLibras (oficial do governo) -->
-    <div vw class="enabled">
-        <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper>
-            <div class="vw-plugin-top-wrapper"></div>
-        </div>
-    </div>
 </body>
 </html>
