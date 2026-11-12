@@ -6,7 +6,7 @@
     <meta name="description" content="Sensores de temperatura para medição do aquecimento da piscina - Projeto Sol+Água">
     <title>6. Sensores de Temperatura | Projeto Sol+Água</title>
     
-    <!-- VLibras -->
+    <!-- VLibras - Acessibilidade em Libras (OBRIGATÓRIO) -->
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     
     <style>
@@ -23,7 +23,7 @@
             --cor-texto: #212529;
             --cor-texto-secundario: #495057;
             --cor-borda: #DEE2E6;
-            --cor-destaque: #FFF3CD;
+            --cor-destaque-piscina: #FFF3CD;
             --fonte-padrao: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --tamanho-fonte: 1rem;
             --espacamento-linha: 1.6;
@@ -31,81 +31,37 @@
             --raio-borda: 12px;
             --sombra: 0 4px 12px rgba(0,0,0,0.08);
             --transicao: 0.3s ease;
-            --tamanho-cursor: auto;
         }
 
-        /* Modo Alto Contraste */
+        /* --- MODOS DE ACESSIBILIDADE AVANÇADOS --- */
         body.alto-contraste {
-            --cor-sol: #FFD700;
-            --cor-sol-escuro: #FFA500;
-            --cor-agua: #00FFFF;
-            --cor-agua-escura: #00CED1;
-            --cor-fundo: #000000;
-            --cor-fundo-card: #1A1A1A;
-            --cor-texto: #FFFFFF;
-            --cor-texto-secundario: #FFFF00;
-            --cor-borda: #FFFFFF;
-            --cor-destaque: #333300;
+            --cor-sol: #FFD700; --cor-sol-escuro: #FFA500;
+            --cor-agua: #00FFFF; --cor-agua-escura: #00CED1;
+            --cor-fundo: #000000; --cor-fundo-card: #1A1A1A;
+            --cor-texto: #FFFFFF; --cor-texto-secundario: #FFFF00;
+            --cor-borda: #FFFFFF; --cor-destaque-piscina: #333300;
         }
 
-        /* Modo Dislexia */
         body.modo-dislexia {
             --fonte-padrao: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif;
-            --tamanho-fonte: 1.15rem;
-            --espacamento-linha: 2;
-            --espacamento-letras: 1px;
+            --tamanho-fonte: 1.15rem; --espacamento-linha: 2; --espacamento-letras: 1px;
         }
 
-        /* Modo Fonte Grande */
-        body.fonte-grande {
-            --tamanho-fonte: 1.3rem;
-        }
+        body.fonte-grande { --tamanho-fonte: 1.3rem; }
+        body.fonte-extra-grande { --tamanho-fonte: 1.5rem; --espacamento-linha: 1.9; }
 
-        /* Modo Fonte Extra Grande */
-        body.fonte-extra-grande {
-            --tamanho-fonte: 1.5rem;
-            --espacamento-linha: 1.9;
-        }
+        /* Filtros para Daltonismo */
+        body.protanopia { --cor-sol: #FFB000; --cor-agua: #648FFF; }
+        body.deuteranopia { --cor-sol: #E69F00; --cor-agua: #56B4E9; }
+        body.tritanopia { --cor-sol: #FF6B6B; --cor-agua: #4ECDC4; }
 
-        /* Daltonismo - Protanopia (vermelho) */
-        body.protanopia {
-            --cor-sol: #FFB000;
-            --cor-sol-escuro: #CC8800;
-            --cor-agua: #648FFF;
-            --cor-agua-escura: #4169E1;
-        }
-
-        /* Daltonismo - Deuteranopia (verde) */
-        body.deuteranopia {
-            --cor-sol: #E69F00;
-            --cor-sol-escuro: #B37700;
-            --cor-agua: #56B4E9;
-            --cor-agua-escura: #0072B2;
-        }
-
-        /* Daltonismo - Tritanopia (azul) */
-        body.tritanopia {
-            --cor-sol: #FF6B6B;
-            --cor-sol-escuro: #CC4444;
-            --cor-agua: #4ECDC4;
-            --cor-agua-escura: #26A69A;
-        }
-
-        /* Cursor Grande */
+        /* Cursor Grande Personalizado */
         body.cursor-grande, body.cursor-grande * {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="black" stroke="white" stroke-width="2" d="M4 0 L4 20 L9 15 L13 22 L16 20 L12 13 L19 13 Z"/></svg>') 0 0, auto;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: var(--fonte-padrao);
             font-size: var(--tamanho-fonte);
@@ -117,731 +73,213 @@
         }
 
         /* ============================================
-           ACESSIBILIDADE - SKIP LINK
+           ACESSIBILIDADE: SKIP LINK, FOCO E GUIA
            ============================================ */
         .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--cor-sol);
-            color: #000;
-            padding: 8px 16px;
-            z-index: 1000;
-            font-weight: bold;
-            text-decoration: none;
+            position: absolute; top: -40px; left: 0;
+            background: var(--cor-sol); color: #000;
+            padding: 8px 16px; z-index: 1000; font-weight: bold; text-decoration: none;
         }
+        .skip-link:focus { top: 0; }
+        *:focus-visible { outline: 3px solid var(--cor-sol); outline-offset: 3px; }
 
-        .skip-link:focus {
-            top: 0;
+        /* Guia de Leitura (Segue o mouse) */
+        .guia-leitura {
+            position: fixed; left: 0; width: 100%; height: 40px;
+            background: rgba(255, 215, 0, 0.25);
+            border-top: 2px solid var(--cor-sol);
+            border-bottom: 2px solid var(--cor-sol);
+            pointer-events: none; z-index: 500; display: none;
         }
-
-        *:focus {
-            outline: 3px solid var(--cor-sol);
-            outline-offset: 3px;
-        }
-
-        *:focus:not(:focus-visible) {
-            outline: none;
-        }
-
-        *:focus-visible {
-            outline: 3px solid var(--cor-sol);
-            outline-offset: 3px;
-        }
+        body.guia-ativo .guia-leitura { display: block; }
 
         /* ============================================
-           CABEÇALHO E HERO
+           CABEÇALHO E HERO (CONEXÃO COM A PISCINA)
            ============================================ */
         header {
             background: linear-gradient(135deg, var(--cor-sol) 0%, var(--cor-agua) 100%);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: var(--sombra);
+            color: white; padding: 2rem 1rem; text-align: center; box-shadow: var(--sombra);
         }
-
-        header h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            opacity: 0.95;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* HERO - Por que isso importa para sua piscina */
+        header h1 { font-size: clamp(1.5rem, 4vw, 2.5rem); margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
         .hero-piscina {
             background: linear-gradient(135deg, #fff8e7 0%, #e0f7fa 100%);
-            padding: 3rem 1rem;
-            text-align: center;
-            border-bottom: 4px solid var(--cor-agua);
+            padding: 3rem 1rem; text-align: center; border-bottom: 4px solid var(--cor-agua);
         }
+        body.alto-contraste .hero-piscina { background: #111; }
+        .hero-piscina h2 { color: var(--cor-sol-escuro); justify-content: center; }
 
-        body.alto-contraste .hero-piscina {
-            background: #111;
-        }
-
-        .hero-piscina h2 {
-            color: var(--cor-sol-escuro);
-            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-            margin-bottom: 1rem;
-        }
-
-        .hero-piscina > p {
-            max-width: 900px;
-            margin: 0 auto 2rem;
-            font-size: 1.1rem;
-            color: var(--cor-texto-secundario);
-        }
-
-        /* Infográfico do Ciclo */
         .ciclo-aquecimento {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            max-width: 1100px;
-            margin: 2rem auto;
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 1100px; margin: 2rem auto;
         }
-
         .etapa-ciclo {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            box-shadow: var(--sombra);
-            min-width: 180px;
-            max-width: 220px;
-            border-top: 5px solid var(--cor-sol);
-            text-align: center;
-            transition: transform var(--transicao);
+            background: white; padding: 1.5rem; border-radius: var(--raio-borda);
+            box-shadow: var(--sombra); min-width: 160px; max-width: 200px;
+            border-top: 5px solid var(--cor-sol); text-align: center;
         }
-
-        body.alto-contraste .etapa-ciclo {
-            background: #1A1A1A;
-            border-color: var(--cor-sol);
-        }
-
-        .etapa-ciclo:hover {
-            transform: translateY(-8px);
-        }
-
-        .etapa-ciclo .icone-etapa {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .etapa-ciclo h3 {
-            color: var(--cor-sol-escuro);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .etapa-ciclo p {
-            font-size: 0.9rem;
-            color: var(--cor-texto-secundario);
-        }
-
-        .seta-ciclo {
-            font-size: 2rem;
-            color: var(--cor-agua);
-            font-weight: bold;
-        }
-
-        /* Cards de Impacto Real */
-        .impacto-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            max-width: 1100px;
-            margin: 2rem auto;
-        }
-
-        .card-impacto {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            box-shadow: var(--sombra);
-            border-left: 5px solid var(--cor-agua);
-            text-align: left;
-        }
-
-        body.alto-contraste .card-impacto {
-            background: #1A1A1A;
-        }
-
-        .card-impacto .numero {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--cor-sol-escuro);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-impacto h4 {
-            color: var(--cor-agua-escura);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Breadcrumbs */
-        .breadcrumbs {
-            background: var(--cor-fundo-card);
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-            border-bottom: 2px solid var(--cor-borda);
-        }
-
-        .breadcrumbs ol {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .breadcrumbs li:not(:last-child)::after {
-            content: "›";
-            margin-left: 0.5rem;
-            color: var(--cor-texto-secundario);
-        }
-
-        .breadcrumbs a {
-            color: var(--cor-agua-escura);
-            text-decoration: none;
-        }
-
-        .breadcrumbs a:hover {
-            text-decoration: underline;
-        }
-
-        /* Menu de Navegação */
-        nav.menu-principal {
-            background: var(--cor-fundo-card);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--sombra);
-        }
-
-        nav.menu-principal ul {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        nav.menu-principal a {
-            display: block;
-            padding: 0.6rem 1rem;
-            color: var(--cor-texto);
-            text-decoration: none;
-            border-radius: var(--raio-borda);
-            transition: background var(--transicao);
-            font-weight: 500;
-        }
-
-        nav.menu-principal a:hover,
-        nav.menu-principal a:focus {
-            background: var(--cor-agua);
-            color: white;
-        }
+        body.alto-contraste .etapa-ciclo { background: #1A1A1A; }
+        .etapa-ciclo .icone-etapa { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+        .seta-ciclo { font-size: 2rem; color: var(--cor-agua); font-weight: bold; }
 
         /* ============================================
-           LAYOUT PRINCIPAL
+           NAVEGAÇÃO
            ============================================ */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+        .breadcrumbs {
+            background: var(--cor-fundo-card); padding: 0.75rem 1rem;
+            font-size: 0.9rem; border-bottom: 2px solid var(--cor-borda);
         }
+        .breadcrumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; max-width: 1200px; margin: 0 auto; }
+        .breadcrumbs li:not(:last-child)::after { content: "›"; margin-left: 0.5rem; color: var(--cor-texto-secundario); }
+        .breadcrumbs a { color: var(--cor-agua-escura); text-decoration: none; }
 
+        nav.menu-principal {
+            background: var(--cor-fundo-card); padding: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: var(--sombra);
+        }
+        nav.menu-principal ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; max-width: 1200px; margin: 0 auto; }
+        nav.menu-principal a {
+            display: block; padding: 0.6rem 1rem; color: var(--cor-texto); text-decoration: none;
+            border-radius: var(--raio-borda); transition: background var(--transicao); font-weight: 500;
+        }
+        nav.menu-principal a:hover, nav.menu-principal a:focus { background: var(--cor-agua); color: white; }
+
+        /* ============================================
+           CONTEÚDO PRINCIPAL
+           ============================================ */
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
         section {
-            background: var(--cor-fundo-card);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-radius: var(--raio-borda);
-            box-shadow: var(--sombra);
-            border-left: 5px solid var(--cor-sol);
+            background: var(--cor-fundo-card); padding: 2rem; margin-bottom: 2rem;
+            border-radius: var(--raio-borda); box-shadow: var(--sombra); border-left: 5px solid var(--cor-sol);
         }
+        section:nth-child(even) { border-left-color: var(--cor-agua); }
+        h2 { color: var(--cor-sol-escuro); margin-bottom: 1rem; font-size: clamp(1.3rem, 3vw, 1.8rem); display: flex; align-items: center; gap: 0.5rem; }
+        h3 { color: var(--cor-agua-escura); margin: 1.5rem 0 0.75rem; font-size: 1.2rem; }
+        p { margin-bottom: 1rem; color: var(--cor-texto-secundario); }
 
-        section:nth-child(even) {
-            border-left-color: var(--cor-agua);
-        }
-
-        h2 {
-            color: var(--cor-sol-escuro);
-            margin-bottom: 1rem;
-            font-size: clamp(1.3rem, 3vw, 1.8rem);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        h2 .icone {
-            font-size: 1.5em;
-        }
-
-        h3 {
-            color: var(--cor-agua-escura);
-            margin: 1.5rem 0 0.75rem;
-            font-size: 1.2rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
-            color: var(--cor-texto-secundario);
-        }
-
-        /* Caixa de Conexão com a Piscina */
+        /* Caixa de Destaque: Conexão com a Piscina */
         .conexao-piscina {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffe5b4 100%);
+            background: var(--cor-destaque-piscina);
             border: 2px solid var(--cor-sol);
             border-radius: var(--raio-borda);
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            position: relative;
+            padding: 1.5rem; margin: 1.5rem 0; position: relative;
         }
-
-        body.alto-contraste .conexao-piscina {
-            background: #333;
-            border-color: var(--cor-sol);
-        }
-
         .conexao-piscina::before {
             content: "🏊 CONEXÃO COM A PISCINA";
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: var(--cor-sol);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            position: absolute; top: -12px; left: 20px;
+            background: var(--cor-sol); color: #000;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;
         }
+        .conexao-piscina h4 { color: var(--cor-sol-escuro); margin-bottom: 0.5rem; margin-top: 0.5rem; }
 
-        .conexao-piscina h4 {
-            color: var(--cor-sol-escuro);
-            margin-bottom: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Botão Libras */
+        /* Botões e Controles */
         .btn-libras {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--cor-agua);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: var(--raio-borda);
-            cursor: pointer;
-            font-weight: bold;
-            margin: 1rem 0;
-            transition: transform var(--transicao), background var(--transicao);
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--cor-agua); color: white; border: none;
+            padding: 0.6rem 1.2rem; border-radius: var(--raio-borda);
+            cursor: pointer; font-weight: bold; margin: 1rem 0;
         }
+        .btn-libras:hover { background: var(--cor-agua-escura); }
 
-        .btn-libras:hover,
-        .btn-libras:focus {
-            background: var(--cor-agua-escura);
-            transform: translateY(-2px);
-        }
-
-        /* ============================================
-           PAINEL DE ACESSIBILIDADE EXPANDIDO
-           ============================================ */
-        .acessibilidade-painel {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            z-index: 999;
-        }
-
-        .acessibilidade-toggle {
-            background: var(--cor-sol);
-            color: #000;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50% 0 0 50%;
-            cursor: pointer;
-            font-size: 1.8rem;
-            box-shadow: var(--sombra);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .acessibilidade-menu {
-            position: absolute;
-            right: 70px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--cor-fundo-card);
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
-            gap: 0.5rem;
-            min-width: 280px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 2px solid var(--cor-borda);
-        }
-
-        .acessibilidade-menu.aberto {
-            display: flex;
-        }
-
-        .acessibilidade-menu h3 {
-            color: var(--cor-sol-escuro);
-            font-size: 1rem;
-            margin: 0.5rem 0 0.3rem;
-            border-bottom: 1px solid var(--cor-borda);
-            padding-bottom: 0.3rem;
-        }
-
-        .acessibilidade-menu button {
-            background: var(--cor-fundo);
-            border: 2px solid var(--cor-borda);
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            transition: all var(--transicao);
-            font-size: 0.95rem;
-        }
-
-        .acessibilidade-menu button:hover,
-        .acessibilidade-menu button:focus {
-            background: var(--cor-agua);
-            color: white;
-            border-color: var(--cor-agua);
-        }
-
-        .acessibilidade-menu button.ativo {
-            background: var(--cor-sol);
-            color: #000;
-            border-color: var(--cor-sol-escuro);
-            font-weight: bold;
-        }
-
-        /* Guia de Leitura */
-        .guia-leitura {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background: rgba(255, 215, 0, 0.3);
-            border-top: 2px solid var(--cor-sol);
-            border-bottom: 2px solid var(--cor-sol);
-            pointer-events: none;
-            z-index: 500;
-            display: none;
-        }
-
-        body.guia-ativo .guia-leitura {
-            display: block;
-        }
-
-        /* ============================================
-           SIMULADORES
-           ============================================ */
         .simulador-container {
             background: linear-gradient(135deg, #f0f8ff 0%, #fff8e7 100%);
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            margin: 1.5rem 0;
-            border: 2px dashed var(--cor-agua);
+            padding: 1.5rem; border-radius: var(--raio-borda); margin: 1.5rem 0; border: 2px dashed var(--cor-agua);
         }
+        body.alto-contraste .simulador-container { background: #000; border-color: var(--cor-agua); }
+        canvas { display: block; max-width: 100%; height: auto; margin: 1rem auto; background: white; border-radius: 8px; }
+        body.alto-contraste canvas { background: #111; }
 
-        body.alto-contraste .simulador-container {
-            background: #000;
-            border-color: var(--cor-agua);
-        }
+        .controles-simulador { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; align-items: center; justify-content: center; }
+        .controle-grupo { display: flex; flex-direction: column; gap: 0.3rem; }
+        .controle-grupo label { font-weight: bold; font-size: 0.9rem; }
+        input[type="range"] { width: 200px; cursor: pointer; }
+        .valor-display { background: var(--cor-sol); color: #000; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; min-width: 60px; text-align: center; }
 
-        canvas {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 1rem auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--sombra);
-        }
-
-        body.alto-contraste canvas {
-            background: #111;
-        }
-
-        .controles-simulador {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .controle-grupo {
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-        }
-
-        .controle-grupo label {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        input[type="range"] {
-            width: 200px;
-            cursor: pointer;
-        }
-
-        .valor-display {
-            background: var(--cor-sol);
-            color: #000;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        /* Cards de Conceitos */
-        .grid-conceitos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .card-conceito {
-            background: var(--cor-fundo);
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            border-top: 4px solid var(--cor-sol);
-            transition: transform var(--transicao);
-        }
-
-        .card-conceito:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-conceito h4 {
-            color: var(--cor-sol-escuro);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Tabela */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: var(--cor-fundo-card);
-        }
-
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--cor-borda);
-        }
-
-        th {
-            background: var(--cor-agua);
-            color: white;
-        }
-
-        tr:hover {
-            background: var(--cor-fundo);
-        }
+        .grid-conceitos { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .card-conceito { background: var(--cor-fundo); padding: 1.5rem; border-radius: var(--raio-borda); border-top: 4px solid var(--cor-sol); }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: var(--cor-fundo-card); }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--cor-borda); }
+        th { background: var(--cor-agua); color: white; }
 
         /* Calculadora de Economia */
         .calculadora {
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            padding: 2rem;
-            border-radius: var(--raio-borda);
-            margin: 2rem 0;
-            border: 3px solid #4CAF50;
+            padding: 2rem; border-radius: var(--raio-borda); margin: 2rem 0; border: 3px solid #4CAF50;
         }
-
-        body.alto-contraste .calculadora {
-            background: #0a2e0a;
-            border-color: #4CAF50;
-        }
-
-        .calculadora h3 {
-            color: #2E7D32;
-            margin-top: 0;
-        }
-
-        body.alto-contraste .calculadora h3 {
-            color: #81C784;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .calc-grid label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-        }
-
-        .calc-grid input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 2px solid var(--cor-borda);
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
+        body.alto-contraste .calculadora { background: #0a2e0a; border-color: #4CAF50; }
+        .calculadora h3 { color: #2E7D32; margin-top: 0; }
+        body.alto-contraste .calculadora h3 { color: #81C784; }
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .calc-grid label { display: block; font-weight: bold; margin-bottom: 0.3rem; }
+        .calc-grid input { width: 100%; padding: 0.5rem; border: 2px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; }
         .resultado-calc {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--raio-borda);
-            margin-top: 1rem;
-            text-align: center;
-            border: 2px dashed #4CAF50;
+            background: white; padding: 1.5rem; border-radius: var(--raio-borda); margin-top: 1rem; text-align: center; border: 2px dashed #4CAF50;
         }
+        body.alto-contraste .resultado-calc { background: #1A1A1A; }
+        .resultado-calc .valor-grande { font-size: 2.5rem; font-weight: bold; color: #2E7D32; display: block; margin: 0.5rem 0; }
+        body.alto-contraste .resultado-calc .valor-grande { color: #81C784; }
 
-        body.alto-contraste .resultado-calc {
-            background: #1A1A1A;
+        /* ============================================
+           PAINEL DE ACESSIBILIDADE EXPANDIDO
+           ============================================ */
+        .acessibilidade-painel { position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 999; }
+        .acessibilidade-toggle {
+            background: var(--cor-sol); color: #000; border: none; width: 60px; height: 60px;
+            border-radius: 50% 0 0 50%; cursor: pointer; font-size: 1.8rem; box-shadow: var(--sombra);
         }
-
-        .resultado-calc .valor-grande {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #2E7D32;
-            display: block;
-            margin: 0.5rem 0;
+        .acessibilidade-menu {
+            position: absolute; right: 70px; top: 50%; transform: translateY(-50%);
+            background: var(--cor-fundo-card); padding: 1.5rem; border-radius: var(--raio-borda);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: none; flex-direction: column;
+            gap: 0.5rem; min-width: 280px; border: 2px solid var(--cor-borda);
         }
-
-        body.alto-contraste .resultado-calc .valor-grande {
-            color: #81C784;
+        .acessibilidade-menu.aberto { display: flex; }
+        .acessibilidade-menu h3 { color: var(--cor-sol-escuro); font-size: 1rem; margin: 0.5rem 0 0.3rem; border-bottom: 1px solid var(--cor-borda); }
+        .acessibilidade-menu button {
+            background: var(--cor-fundo); border: 2px solid var(--cor-borda); padding: 0.6rem 1rem;
+            border-radius: 8px; cursor: pointer; text-align: left; transition: all var(--transicao);
         }
+        .acessibilidade-menu button:hover, .acessibilidade-menu button:focus { background: var(--cor-agua); color: white; border-color: var(--cor-agua); }
+        .acessibilidade-menu button.ativo { background: var(--cor-sol); color: #000; border-color: var(--cor-sol-escuro); font-weight: bold; }
 
-        /* Atalhos de Teclado */
         .atalhos-teclado {
-            background: var(--cor-fundo);
-            padding: 1rem;
-            border-radius: var(--raio-borda);
-            margin: 1rem 0;
-            font-size: 0.9rem;
+            background: var(--cor-fundo); padding: 1rem; border-radius: var(--raio-borda); margin: 1rem 0; font-size: 0.9rem;
         }
+        .atalhos-teclado kbd { background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-family: monospace; }
+        body.alto-contraste .atalhos-teclado kbd { background: #fff; color: #000; }
 
-        .atalhos-teclado kbd {
-            background: #333;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            margin: 0 2px;
-        }
-
-        body.alto-contraste .atalhos-teclado kbd {
-            background: #fff;
-            color: #000;
-        }
-
-        /* Rodapé */
         footer {
             background: linear-gradient(135deg, var(--cor-agua-escura) 0%, var(--cor-sol-escuro) 100%);
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 3rem;
+            color: white; text-align: center; padding: 2rem 1rem; margin-top: 3rem;
         }
 
-        footer a {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-        /* Responsividade */
         @media (max-width: 768px) {
-            section {
-                padding: 1.5rem 1rem;
-            }
-
-            nav.menu-principal ul {
-                flex-direction: column;
-            }
-
-            nav.menu-principal a {
-                text-align: center;
-            }
-
-            .acessibilidade-painel {
-                top: auto;
-                bottom: 20px;
-                right: 10px;
-                transform: none;
-            }
-
-            .acessibilidade-menu {
-                right: 70px;
-                top: auto;
-                bottom: 0;
-                transform: none;
-                max-height: 70vh;
-            }
-
-            input[type="range"] {
-                width: 150px;
-            }
-
-            .seta-ciclo {
-                transform: rotate(90deg);
-            }
+            nav.menu-principal ul { flex-direction: column; }
+            nav.menu-principal a { text-align: center; }
+            .acessibilidade-painel { top: auto; bottom: 20px; right: 10px; transform: none; }
+            .acessibilidade-menu { right: 70px; top: auto; bottom: 0; transform: none; max-height: 70vh; }
+            .seta-ciclo { transform: rotate(90deg); }
         }
-
         @media (prefers-reduced-motion: reduce) {
-            * {
-                transition: none !important;
-                animation: none !important;
-            }
-            html {
-                scroll-behavior: auto;
-            }
+            * { transition: none !important; animation: none !important; }
+            html { scroll-behavior: auto; }
         }
     </style>
 </head>
 <body>
     <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
-
-    <!-- GUIA DE LEITURA -->
+    
+    <!-- Guia de Leitura (Segue o mouse) -->
     <div class="guia-leitura" aria-hidden="true"></div>
 
-    <!-- CABEÇALHO -->
     <header role="banner">
         <h1>🌊☀️ Sensores de Temperatura</h1>
         <p>Como medir com precisão o aquecimento da sua piscina usando física e robótica</p>
     </header>
 
-    <!-- HERO - CONEXÃO COM A PISCINA -->
+    <!-- HERO: CONEXÃO EXPLÍCITA COM A PISCINA -->
     <section class="hero-piscina" aria-label="Introdução ao projeto">
         <h2>🏊 Por que sensores são essenciais para sua piscina?</h2>
-        <p>
+        <p style="max-width: 900px; margin: 0 auto 2rem; font-size: 1.1rem;">
             Imagine sua piscina aquecida por energia solar: o sol emite <strong>ondas eletromagnéticas</strong>, 
             o coletor (comportamento de <strong>corpo negro</strong>) absorve essa radiação e aquece a água, 
             enquanto os <strong>painéis fotovoltaicos</strong> (efeito fotoelétrico) alimentam o sistema. 
@@ -850,18 +288,17 @@
         </p>
 
         <h3 style="text-align:center; color:var(--cor-agua-escura);">O Ciclo Completo do Aquecimento Inteligente</h3>
-        
         <div class="ciclo-aquecimento" role="list" aria-label="Etapas do aquecimento da piscina">
             <div class="etapa-ciclo" role="listitem">
                 <span class="icone-etapa" aria-hidden="true">☀️</span>
                 <h3>1. Sol</h3>
-                <p>Emite radiação visível e infravermelha (ondas EM)</p>
+                <p>Emite radiação visível e infravermelha</p>
             </div>
             <div class="seta-ciclo" aria-hidden="true">→</div>
             <div class="etapa-ciclo" role="listitem">
                 <span class="icone-etapa" aria-hidden="true">⚫</span>
                 <h3>2. Coletor</h3>
-                <p>Absorve radiação como corpo negro e aquece</p>
+                <p>Absorve radiação como corpo negro</p>
             </div>
             <div class="seta-ciclo" aria-hidden="true">→</div>
             <div class="etapa-ciclo" role="listitem">
@@ -882,34 +319,8 @@
                 <p>Decide: liga bomba ou fecha capa térmica</p>
             </div>
         </div>
-
-        <h3 style="text-align:center; color:var(--cor-sol-escuro); margin-top:2rem;">💡 Impacto Real na Sua Piscina</h3>
-        
-        <div class="impacto-grid">
-            <div class="card-impacto">
-                <span class="numero">30%</span>
-                <h4>Economia de Energia</h4>
-                <p>Sensores precisos evitam aquecimento desnecessário, reduzindo o consumo da bomba de calor.</p>
-            </div>
-            <div class="card-impacto">
-                <span class="numero">2-4°C</span>
-                <h4>Diferença Real</h4>
-                <p>É a variação entre a superfície e o fundo de uma piscina sem circulação — medir só em cima engana!</p>
-            </div>
-            <div class="card-impacto">
-                <span class="numero">R$ 800+</span>
-                <h4>Economia/Ano</h4>
-                <p>Uma piscina residencial bem monitorada pode economizar centenas de reais por ano em energia.</p>
-            </div>
-            <div class="card-impacto">
-                <span class="numero">28°C</span>
-                <h4>Temperatura Ideal</h4>
-                <p>Conforto para banho. Abaixo de 25°C = frio. Acima de 30°C = desconfortável e favorece bactérias.</p>
-            </div>
-        </div>
     </section>
 
-    <!-- BREADCRUMBS -->
     <nav class="breadcrumbs" aria-label="Caminho da página">
         <ol>
             <li><a href="#">Início</a></li>
@@ -919,7 +330,6 @@
         </ol>
     </nav>
 
-    <!-- MENU PRINCIPAL -->
     <nav class="menu-principal" aria-label="Navegação da seção">
         <ul>
             <li><a href="#fisica-sensor">1. Física do Sensor</a></li>
@@ -931,10 +341,8 @@
         </ul>
     </nav>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main id="conteudo-principal" tabindex="-1">
 
-        <!-- ATALHOS DE TECLADO -->
         <div class="atalhos-teclado" role="region" aria-label="Atalhos de teclado">
             <strong>⌨️ Atalhos de teclado:</strong>
             <kbd>Alt</kbd>+<kbd>1</kbd> Alto Contraste |
@@ -944,110 +352,69 @@
             <kbd>Alt</kbd>+<kbd>0</kbd> Menu Acessibilidade
         </div>
 
-        <!-- SEÇÃO 1: FÍSICA DO SENSOR -->
+        <!-- SEÇÃO 1 -->
         <section id="fisica-sensor" aria-labelledby="titulo-fisica">
             <h2 id="titulo-fisica"><span class="icone" aria-hidden="true">🔬</span> 1. Como um sensor transforma grandeza física em sinal elétrico?</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a física do sensor" onclick="abrirVideoLibras('fisica-sensor')">
-                🤟 Ver em Libras
-            </button>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a física do sensor" onclick="abrirVideoLibras('fisica-sensor')">🤟 Ver em Libras</button>
 
             <p>Um sensor de temperatura é um <strong>transdutor</strong>: ele converte uma grandeza física (calor) em uma grandeza elétrica (tensão ou resistência) que o robô consegue "ler".</p>
-
             <h3>A Física da Termorresistência (NTC)</h3>
-            <p>Em materiais semicondutores como os <strong>termistores NTC</strong> (Negative Temperature Coefficient), o aumento da temperatura agita os átomos da rede cristalina, liberando mais elétrons para conduzir corrente. Resultado: <strong>a resistência elétrica diminui quando a temperatura aumenta</strong>.</p>
-
-            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
-                1/T = A + B·ln(R) + C·(ln(R))³
-            </p>
-
-            <h3>Do Sensor ao Robô: O Divisor de Tensão</h3>
-            <p>O microcontrolador (Arduino/ESP32) não mede resistência diretamente — ele lê <strong>tensão elétrica (0 a 5V)</strong>. Usamos um circuito divisor de tensão para converter a variação de resistência do sensor em variação de voltagem:</p>
-            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
-                V<sub>saída</sub> = V<sub>cc</sub> × R<sub>fixo</sub> / (R<sub>sensor</sub> + R<sub>fixo</sub>)
-            </p>
-
-            <!-- CONEXÃO COM A PISCINA -->
+            <p>Em materiais semicondutores como os <strong>termistores NTC</strong>, o aumento da temperatura agita os átomos da rede cristalina, liberando mais elétrons. Resultado: <strong>a resistência elétrica diminui quando a temperatura aumenta</strong>.</p>
+            
             <div class="conexao-piscina">
                 <h4>🏊 Por que isso importa para sua piscina?</h4>
-                <p>
-                    O sensor <strong>DS18B20</strong> é impermeável e ideal para ficar submerso na piscina. 
-                    Ele envia um <strong>sinal digital</strong> (protocolo 1-Wire), evitando ruídos causados pela umidade. 
-                    Quando a água esquenta, a resistência do termistor diminui, o robô lê essa mudança e sabe: 
-                    <em>"O coletor solar está funcionando! A piscina está aquecendo!"</em>
-                </p>
-                <p><strong>Exemplo real:</strong> Se a piscina está a 22°C e o coletor a 45°C, o robô liga a bomba para circular a água quente. Sem o sensor, ele não saberia quando agir.</p>
+                <p>O sensor <strong>DS18B20</strong> é impermeável e ideal para ficar submerso na piscina. Ele envia um <strong>sinal digital</strong>, evitando ruídos causados pela umidade. Quando a água esquenta, a resistência do termistor diminui, o robô lê essa mudança e sabe: <em>"O coletor solar está funcionando! A piscina está aquecendo!"</em></p>
             </div>
 
             <div class="simulador-container">
                 <h3>🎬 Animação: Elétrons no Termistor NTC</h3>
-                <p>Arraste o slider para ver como a temperatura afeta o movimento dos elétrons:</p>
-                <canvas id="canvasNTC" width="600" height="250" aria-label="Animação mostrando elétrons se movendo mais livremente conforme a temperatura aumenta" role="img"></canvas>
+                <canvas id="canvasNTC" width="600" height="250" aria-label="Animação mostrando elétrons se movendo mais livremente conforme a temperatura da água aumenta" role="img"></canvas>
                 <div class="controles-simulador">
                     <div class="controle-grupo">
                         <label for="sliderTempNTC">Temperatura da Água (°C):</label>
-                        <input type="range" id="sliderTempNTC" min="10" max="60" value="25" aria-valuenow="25" aria-valuemin="10" aria-valuemax="60">
+                        <input type="range" id="sliderTempNTC" min="10" max="60" value="25" aria-valuenow="25">
                     </div>
                     <div class="valor-display" id="valorTempNTC" aria-live="polite">25°C</div>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO 2: MAPEAMENTO -->
+        <!-- SEÇÃO 2 -->
         <section id="mapeamento" aria-labelledby="titulo-mapeamento">
             <h2 id="titulo-mapeamento"><span class="icone" aria-hidden="true">🗺️</span> 2. Como medir a temperatura em diferentes pontos?</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre mapeamento térmico" onclick="abrirVideoLibras('mapeamento')">
-                🤟 Ver em Libras
-            </button>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre mapeamento térmico" onclick="abrirVideoLibras('mapeamento')">🤟 Ver em Libras</button>
 
-            <p>A água quente é <strong>menos densa</strong> e tende a subir (convecção natural). Se medirmos apenas na superfície, teremos uma leitura falsa — a água do fundo pode estar vários graus mais fria!</p>
+            <p>A água quente é <strong>menos densa</strong> e tende a subir (convecção natural). Se medirmos apenas na superfície, teremos uma leitura falsa.</p>
 
-            <!-- CONEXÃO COM A PISCINA -->
             <div class="conexao-piscina">
-                <h4>🏊 O problema real da piscina</h4>
-                <p>
-                    Você já entrou numa piscina e sentiu a superfície quente mas o fundo gelado? 
-                    Isso é <strong>estratificação térmica</strong>. Em um dia de sol, a superfície pode estar a 32°C 
-                    enquanto o fundo está a 24°C — uma diferença de <strong>8°C</strong>! 
-                    Se o sensor medir só em cima, você vai achar que a piscina está ótima, mas quem entrar vai sentir frio.
-                </p>
-                <p><strong>Solução:</strong> Nosso robô usa 3 sensores em alturas diferentes para ter a "foto completa" da temperatura.</p>
+                <h4>🏊 O problema real da piscina: Estratificação Térmica</h4>
+                <p>Você já entrou numa piscina e sentiu a superfície quente mas o fundo gelado? Em um dia de sol, a superfície pode estar a 32°C enquanto o fundo está a 24°C — uma diferença de <strong>8°C</strong>! Se o sensor medir só em cima, você vai achar que a piscina está ótima, mas quem entrar vai sentir frio.</p>
             </div>
 
             <h3>Solução Robótica: Sonda Vertical Multi-sensor</h3>
-            <p>Criamos uma <strong>sonda flutuante</strong> com 3 sensores DS18B20 posicionados em alturas diferentes:</p>
-            
             <div class="grid-conceitos">
                 <div class="card-conceito">
                     <h4>🔴 Superfície (0-30cm)</h4>
-                    <p>Água mais quente (recebe radiação solar direta). Pode chegar a 32°C em dias ensolarados. É onde as pessoas nadam.</p>
+                    <p>Água mais quente (recebe radiação solar direta). É onde as pessoas nadam.</p>
                 </div>
                 <div class="card-conceito">
                     <h4>🟡 Meio (80-100cm)</h4>
-                    <p>Zona de transição térmica. Onde ocorre a maior estratificação. Importante para conforto geral.</p>
+                    <p>Zona de transição térmica. Importante para conforto geral do corpo.</p>
                 </div>
                 <div class="card-conceito">
                     <h4>🔵 Fundo (10-30cm do fundo)</h4>
-                    <p>Água mais fria (perde calor por condução com o solo). Tipicamente 2-4°C abaixo da superfície.</p>
+                    <p>Água mais fria (perde calor por condução com o solo). Tipicamente 2-4°C abaixo.</p>
                 </div>
             </div>
-
-            <p>Os 3 sensores compartilham o mesmo barramento <strong>1-Wire</strong>, cada um com endereço único — economizando pinos do Arduino.</p>
         </section>
 
-        <!-- SEÇÃO 3: MÉTRICAS -->
+        <!-- SEÇÃO 3 -->
         <section id="metricas" aria-labelledby="titulo-metricas">
             <h2 id="titulo-metricas"><span class="icone" aria-hidden="true">📏</span> 3. Precisão, Resolução e Tempo de Resposta</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre métricas de sensores" onclick="abrirVideoLibras('metricas')">
-                🤟 Ver em Libras
-            </button>
-
-            <p>Esses três conceitos são fundamentais para escolher o sensor certo:</p>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre métricas de sensores" onclick="abrirVideoLibras('metricas')">🤟 Ver em Libras</button>
 
             <table>
-                <caption style="caption-side:top; text-align:left; padding:0.5rem; font-weight:bold;">Comparativo de métricas de sensores</caption>
+                <caption style="caption-side:top; text-align:left; padding:0.5rem; font-weight:bold;">Comparativo de métricas aplicadas à piscina</caption>
                 <thead>
                     <tr>
                         <th scope="col">Métrica</th>
@@ -1078,20 +445,9 @@
                 </tbody>
             </table>
 
-            <!-- CONEXÃO COM A PISCINA -->
-            <div class="conexao-piscina">
-                <h4>🏊 Por que essas métricas importam?</h4>
-                <p>
-                    Imagine que a temperatura ideal da sua piscina é <strong>28°C</strong>. 
-                    Um sensor com <strong>baixa precisão</strong> (±1°C) pode marcar 28°C quando a água está a 27°C ou 29°C — 
-                    você toma um banho gelado sem saber. Já um sensor com <strong>alta resolução</strong> (0.0625°C) 
-                    permite que o robô detecte pequenas variações e mantenha a temperatura <strong>estável</strong>.
-                </p>
-            </div>
-
             <div class="simulador-container">
                 <h3>🎮 Laboratório Comparativo de Sensores</h3>
-                <p>Arraste o slider para mudar a temperatura real da água e observe como cada sensor responde:</p>
+                <p>Arraste o slider para mudar a temperatura real da água da piscina e observe como cada sensor responde:</p>
                 <canvas id="canvasComparacao" width="600" height="300" aria-label="Comparação visual entre três sensores com diferentes características" role="img"></canvas>
                 <div class="controles-simulador">
                     <div class="controle-grupo">
@@ -1103,70 +459,34 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 4: ANÁLISE DE DADOS -->
+        <!-- SEÇÃO 4 -->
         <section id="dados" aria-labelledby="titulo-dados">
             <h2 id="titulo-dados"><span class="icone" aria-hidden="true">🧠</span> 4. Como os dados indicam se o sistema está aquecendo?</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre análise de dados" onclick="abrirVideoLibras('dados')">
-                🤟 Ver em Libras
-            </button>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre análise de dados" onclick="abrirVideoLibras('dados')">🤟 Ver em Libras</button>
 
-            <p>O robô não apenas lê temperatura — ele <strong>interpreta tendências</strong>. O algoritmo calcula o gradiente temporal:</p>
+            <p>O robô não apenas lê temperatura — ele <strong>interpreta tendências</strong>. O algoritmo calcula o gradiente temporal: ΔT/Δt = (T<sub>atual</sub> - T<sub>anterior</sub>) / intervalo</p>
 
-            <p style="text-align:center; font-style:italic; background:var(--cor-fundo); padding:1rem; border-radius:8px;">
-                ΔT/Δt = (T<sub>atual</sub> - T<sub>anterior</sub>) / intervalo
-            </p>
-
-            <!-- CONEXÃO COM A PISCINA -->
             <div class="conexao-piscina">
                 <h4>🏊 O robô tomando decisões pela sua piscina</h4>
-                <p>
-                    O robô analisa os dados dos 3 sensores e toma decisões automáticas:
-                </p>
                 <ul style="margin-left:1.5rem; color:var(--cor-texto-secundario);">
-                    <li><strong>Dia de sol, piscina esquentando:</strong> mantém a bomba ligada circulando água pelo coletor</li>
-                    <li><strong>Noite, piscina esfriando:</strong> aciona a capa térmica para evitar perda de radiação infravermelha</li>
-                    <li><strong>Piscina na temperatura ideal (28°C):</strong> entra em modo de economia, desliga bomba</li>
-                    <li><strong>Superfície muito mais quente que o fundo:</strong> liga a bomba para homogeneizar</li>
+                    <li><strong>Dia de sol, piscina esquentando:</strong> mantém a bomba ligada circulando água pelo coletor.</li>
+                    <li><strong>Noite, piscina esfriando:</strong> aciona a capa térmica para evitar perda de radiação infravermelha.</li>
+                    <li><strong>Piscina na temperatura ideal (28°C):</strong> entra em modo de economia, desliga bomba.</li>
+                    <li><strong>Superfície muito mais quente que o fundo:</strong> liga a bomba para homogeneizar a água.</li>
                 </ul>
-            </div>
-
-            <h3>Lógica de Decisão do Robô</h3>
-            <div class="grid-conceitos">
-                <div class="card-conceito" style="border-top-color:#4CAF50;">
-                    <h4>✅ Sistema AQUECENDO</h4>
-                    <p>Se <code>T_piscina ↑</code> E <code>T_coletor > T_piscina</code> → o coletor (corpo negro) está absorvendo radiação e transferindo calor. Bomba ligada.</p>
-                </div>
-                <div class="card-conceito" style="border-top-color:#f44336;">
-                    <h4>❌ Sistema ESFRIANDO</h4>
-                    <p>Se <code>T_piscina ↓</code> à noite → perda de radiação infravermelha para o céu. Robô aciona a capa térmica automaticamente.</p>
-                </div>
-                <div class="card-conceito" style="border-top-color:#2196F3;">
-                    <h4>⚖️ EQUILÍBRIO</h4>
-                    <p>Se <code>ΔT/Δt ≈ 0</code> → sistema estável. Robô entra em modo de monitoramento passivo, economizando energia.</p>
-                </div>
             </div>
         </section>
 
-        <!-- SEÇÃO 5: SIMULADORES -->
+        <!-- SEÇÃO 5 -->
         <section id="simuladores" aria-labelledby="titulo-simuladores">
             <h2 id="titulo-simuladores"><span class="icone" aria-hidden="true">🎮</span> 5. Simulador Principal: Estratificação Térmica</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre o simulador" onclick="abrirVideoLibras('simuladores')">
-                🤟 Ver em Libras
-            </button>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre o simulador" onclick="abrirVideoLibras('simuladores')">🤟 Ver em Libras</button>
 
             <p>Experimente como a estratificação térmica se comporta na <strong>sua piscina</strong> conforme você altera a intensidade do sol e a circulação da bomba:</p>
 
-            <!-- CONEXÃO COM A PISCINA -->
             <div class="conexao-piscina">
                 <h4>🏊 O que você vai aprender</h4>
-                <p>
-                    Este simulador mostra exatamente o que acontece na sua piscina: 
-                    <strong>sem a bomba</strong>, a água de cima esquenta muito e a de baixo fica fria (desconforto). 
-                    <strong>Com a bomba</strong>, a temperatura se uniformiza (conforto + economia). 
-                    É assim que o robô decide quando ligar a circulação!
-                </p>
+                <p><strong>Sem a bomba</strong>, a água de cima esquenta muito e a de baixo fica fria (desconforto). <strong>Com a bomba</strong>, a temperatura se uniformiza (conforto + economia). É assim que o robô decide quando ligar a circulação!</p>
             </div>
 
             <div class="simulador-container">
@@ -1187,20 +507,13 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 6: CALCULADORA DE ECONOMIA -->
+        <!-- SEÇÃO 6: CALCULADORA (INOVAÇÃO E IMPACTO) -->
         <section id="calculadora" aria-labelledby="titulo-calc">
-            <h2 id="titulo-calc"><span class="icone" aria-hidden="true">💰</span> 6. Calculadora de Economia</h2>
-            
-            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a calculadora" onclick="abrirVideoLibras('calculadora')">
-                🤟 Ver em Libras
-            </button>
-
-            <p>Descubra quanto você pode <strong>economizar</strong> usando sensores para otimizar o aquecimento da sua piscina:</p>
+            <h2 id="titulo-calc"><span class="icone" aria-hidden="true">💰</span> 6. Calculadora de Economia e Sustentabilidade</h2>
+            <button class="btn-libras" aria-label="Assistir explicação em Libras sobre a calculadora" onclick="abrirVideoLibras('calculadora')">🤟 Ver em Libras</button>
 
             <div class="calculadora">
-                <h3>💡 Calcule sua economia anual</h3>
-                <p>Preencha os dados da sua piscina:</p>
-                
+                <h3>💡 Calcule a economia anual da sua piscina com sensores inteligentes</h3>
                 <div class="calc-grid">
                     <div>
                         <label for="calcVolume">Volume da piscina (m³):</label>
@@ -1219,35 +532,14 @@
                         <input type="number" id="calcTarifa" value="0.85" min="0.3" max="2" step="0.01">
                     </div>
                 </div>
-
-                <button class="btn-libras" onclick="calcularEconomia()" style="background:#4CAF50; width:100%; justify-content:center;">
-                    💰 Calcular Economia
-                </button>
+                <button class="btn-libras" onclick="calcularEconomia()" style="background:#4CAF50; width:100%; justify-content:center;">💰 Calcular Economia</button>
 
                 <div class="resultado-calc" id="resultadoCalc" style="display:none;">
                     <p>Com sensores inteligentes, você pode economizar:</p>
                     <span class="valor-grande" id="economiaAnual">R$ 0,00</span>
                     <p><strong>por ano</strong> em energia elétrica!</p>
-                    <p style="margin-top:1rem; font-size:0.9rem;">
-                        Isso equivale a <strong id="equivalenciaCO2">0 kg</strong> de CO₂ não emitidos 🌱
-                    </p>
+                    <p style="margin-top:1rem; font-size:0.9rem;">Isso equivale a <strong id="equivalenciaCO2">0 kg</strong> de CO₂ não emitidos 🌱</p>
                 </div>
-            </div>
-
-            <!-- CONEXÃO COM A PISCINA -->
-            <div class="conexao-piscina">
-                <h4>🏊 Como os sensores geram essa economia?</h4>
-                <p>
-                    Sem sensores, uma bomba de calor pode ficar ligada <strong>desnecessariamente</strong>, 
-                    aquecendo água que já está quente ou mantendo temperatura quando a piscina não está em uso. 
-                    Com sensores precisos, o robô:
-                </p>
-                <ul style="margin-left:1.5rem; color:var(--cor-texto-secundario);">
-                    <li>Desliga a bomba quando atinge a temperatura ideal (evita superaquecimento)</li>
-                    <li>Fecha a capa térmica à noite (evita perda de calor por radiação infravermelha)</li>
-                    <li>Aproveita ao máximo o calor do coletor solar (corpo negro)</li>
-                    <li>Usa energia dos painéis fotovoltaicos (efeito fotoelétrico) de forma inteligente</li>
-                </ul>
             </div>
         </section>
 
@@ -1255,9 +547,7 @@
 
     <!-- PAINEL DE ACESSIBILIDADE EXPANDIDO -->
     <div class="acessibilidade-painel" role="region" aria-label="Configurações de acessibilidade">
-        <button class="acessibilidade-toggle" aria-label="Abrir menu de acessibilidade" aria-expanded="false" onclick="toggleAcessibilidade()">
-            ⚙️
-        </button>
+        <button class="acessibilidade-toggle" aria-label="Abrir menu de acessibilidade" aria-expanded="false" onclick="toggleAcessibilidade()">⚙️</button>
         <div class="acessibilidade-menu" id="menuAcessibilidade" role="menu">
             <h3>🎨 Visual</h3>
             <button role="menuitem" onclick="toggleAltoContraste()" id="btnAltoContraste">🌓 Alto Contraste</button>
@@ -1283,14 +573,13 @@
         </div>
     </div>
 
-    <!-- RODAPÉ -->
     <footer role="contentinfo">
         <p><strong>Projeto Sol+Água</strong> - Integração Tecnociência + Robótica</p>
         <p>Ondas Eletromagnéticas • Corpo Negro • Efeito Fotoelétrico • Sensores</p>
         <p>© 2026 - Código aberto sob licença MIT | <a href="#">GitHub do Projeto</a></p>
     </footer>
 
-    <!-- VLibras -->
+    <!-- Widget VLibras -->
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
         <div vw-plugin-wrapper>
@@ -1300,15 +589,12 @@
 
     <script>
         window.addEventListener('load', function() {
-            if (window.VLibras) {
-                new window.VLibras.Widget('https://vlibras.gov.br/app');
-            }
+            if (window.VLibras) { new window.VLibras.Widget('https://vlibras.gov.br/app'); }
+            carregarPreferencias();
         });
-    </script>
 
-    <script>
         /* ============================================
-           ACESSIBILIDADE EXPANDIDA
+           ACESSIBILIDADE AVANÇADA
            ============================================ */
         function toggleAcessibilidade() {
             const menu = document.getElementById('menuAcessibilidade');
@@ -1359,9 +645,7 @@
 
         function toggleDaltonismo(tipo) {
             document.body.classList.remove('protanopia', 'deuteranopia', 'tritanopia');
-            if (tipo) {
-                document.body.classList.add(tipo);
-            }
+            if (tipo) document.body.classList.add(tipo);
             atualizarBotao('btnProtanopia', tipo === 'protanopia');
             atualizarBotao('btnDeuteranopia', tipo === 'deuteranopia');
             atualizarBotao('btnTritanopia', tipo === 'tritanopia');
@@ -1371,41 +655,23 @@
 
         function atualizarBotao(id, ativo) {
             const btn = document.getElementById(id);
-            if (btn) {
-                if (ativo) btn.classList.add('ativo');
-                else btn.classList.remove('ativo');
-            }
+            if (btn) ativo ? btn.classList.add('ativo') : btn.classList.remove('ativo');
         }
 
         function lerTexto() {
             if ('speechSynthesis' in window) {
                 pararLeitura();
-                const texto = document.getElementById('conteudo-principal').innerText;
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'pt-BR';
-                utterance.rate = 0.9;
+                const utterance = new SpeechSynthesisUtterance(document.getElementById('conteudo-principal').innerText);
+                utterance.lang = 'pt-BR'; utterance.rate = 0.9;
                 window.utteranceAtual = utterance;
                 speechSynthesis.speak(utterance);
-            } else {
-                alert('Seu navegador não suporta leitura em voz alta.');
             }
         }
 
-        function pararLeitura() {
-            if ('speechSynthesis' in window) {
-                speechSynthesis.cancel();
-            }
-        }
+        function pararLeitura() { if ('speechSynthesis' in window) speechSynthesis.cancel(); }
 
         function mostrarAtalhos() {
-            alert('⌨️ ATALHOS DE TECLADO:\n\n' +
-                  'Alt + 1: Alto Contraste\n' +
-                  'Alt + 2: Guia de Leitura\n' +
-                  'Alt + 3: Fonte Grande\n' +
-                  'Alt + 4: Ler em Voz Alta\n' +
-                  'Alt + 0: Abrir Menu Acessibilidade\n' +
-                  'TAB: Navegar entre elementos\n' +
-                  'ENTER/ESPAÇO: Ativar botões');
+            alert('⌨️ ATALHOS:\nAlt+1: Alto Contraste\nAlt+2: Guia de Leitura\nAlt+3: Fonte Grande\nAlt+4: Ler em Voz Alta\nAlt+0: Menu Acessibilidade\nTAB: Navegar | ENTER/ESPAÇO: Ativar');
         }
 
         function resetarAcessibilidade() {
@@ -1439,6 +705,9 @@
             if (prefs.cursorGrande) document.body.classList.add('cursor-grande');
             if (prefs.daltonismo) document.body.classList.add(prefs.daltonismo);
             
+            ['btnAltoContraste', 'btnDislexia', 'btnFonteGrande', 'btnFonteExtraGrande', 'btnGuiaLeitura', 'btnCursorGrande'].forEach(id => {
+                // Lógica simplificada para re-aplicar estados visuais dos botões
+            });
             atualizarBotao('btnAltoContraste', prefs.altoContraste);
             atualizarBotao('btnDislexia', prefs.modoDislexia);
             atualizarBotao('btnFonteGrande', prefs.fonteGrande);
@@ -1451,13 +720,10 @@
             atualizarBotao('btnNormal', !prefs.daltonismo);
         }
 
-        window.addEventListener('load', carregarPreferencias);
-
         // Guia de leitura segue o mouse
         document.addEventListener('mousemove', (e) => {
             if (document.body.classList.contains('guia-ativo')) {
-                const guia = document.querySelector('.guia-leitura');
-                guia.style.top = (e.clientY - 20) + 'px';
+                document.querySelector('.guia-leitura').style.top = (e.clientY - 20) + 'px';
             }
         });
 
@@ -1487,20 +753,12 @@
             const tempAmbiente = parseFloat(document.getElementById('calcTempAmbiente').value);
             const tarifa = parseFloat(document.getElementById('calcTarifa').value);
 
-            // Cálculo simplificado da energia necessária para aquecer
-            // Energia (kWh) = volume (m³) × 1000 (kg/m³) × 4.186 (cal/g°C) × ΔT / 860 (kcal/kWh) / 1000
             const deltaT = tempDesejada - tempAmbiente;
-            const energiaDiaria = (volume * 1000 * 4.186 * deltaT) / 860000;
-            
-            // Perdas diárias estimadas (20% da energia)
+            const energiaDiaria = (volume * 1000 * 4.186 * deltaT) / 860000; // kWh
             const perdasDiarias = energiaDiaria * 0.2;
-            
-            // Economia com sensores (30% de redução nas perdas + otimização)
-            const economiaDiaria = perdasDiarias * 0.3 + energiaDiaria * 0.15;
+            const economiaDiaria = (perdasDiarias * 0.3) + (energiaDiaria * 0.15); // 30% menos perdas + 15% otimização
             const economiaAnual = economiaDiaria * 365 * tarifa;
-            
-            // CO₂ evitado (0.4 kg CO₂ por kWh no Brasil)
-            const co2Evitado = (economiaDiaria * 365) * 0.4;
+            const co2Evitado = (economiaDiaria * 365) * 0.4; // 0.4 kg CO2/kWh (média Brasil)
 
             document.getElementById('economiaAnual').textContent = 'R$ ' + economiaAnual.toFixed(2).replace('.', ',');
             document.getElementById('equivalenciaCO2').textContent = co2Evitado.toFixed(0) + ' kg';
@@ -1508,93 +766,60 @@
         }
 
         /* ============================================
-           SIMULADOR 1: ANIMAÇÃO NTC
+           SIMULADORES (Canvas)
            ============================================ */
+        // 1. NTC
         const canvasNTC = document.getElementById('canvasNTC');
         const ctxNTC = canvasNTC.getContext('2d');
-        const sliderTempNTC = document.getElementById('sliderTempNTC');
-        const valorTempNTC = document.getElementById('valorTempNTC');
-
         let temperaturaNTC = 25;
-        let particulas = [];
-
-        for (let i = 0; i < 30; i++) {
-            particulas.push({
-                x: Math.random() * canvasNTC.width,
-                y: Math.random() * canvasNTC.height,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2,
-                raio: 4
-            });
-        }
+        let particulas = Array.from({length: 30}, () => ({
+            x: Math.random() * canvasNTC.width, y: Math.random() * canvasNTC.height,
+            vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, raio: 4
+        }));
 
         function desenharNTC() {
             ctxNTC.clearRect(0, 0, canvasNTC.width, canvasNTC.height);
-            
-            const intensidadeCalor = (temperaturaNTC - 10) / 50;
-            const r = Math.floor(200 + intensidadeCalor * 55);
-            const g = Math.floor(200 - intensidadeCalor * 150);
-            const b = Math.floor(220 - intensidadeCalor * 180);
-            ctxNTC.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            const intensidade = (temperaturaNTC - 10) / 50;
+            ctxNTC.fillStyle = `rgb(${200 + intensidade*55}, ${200 - intensidade*150}, ${220 - intensidade*180})`;
             ctxNTC.fillRect(0, 0, canvasNTC.width, canvasNTC.height);
 
             ctxNTC.fillStyle = 'rgba(50, 50, 50, 0.6)';
             for (let x = 30; x < canvasNTC.width; x += 60) {
                 for (let y = 30; y < canvasNTC.height; y += 60) {
-                    const vibracao = intensidadeCalor * 3;
-                    const dx = (Math.random() - 0.5) * vibracao;
-                    const dy = (Math.random() - 0.5) * vibracao;
+                    const vib = intensidade * 3;
                     ctxNTC.beginPath();
-                    ctxNTC.arc(x + dx, y + dy, 8, 0, Math.PI * 2);
+                    ctxNTC.arc(x + (Math.random()-0.5)*vib, y + (Math.random()-0.5)*vib, 8, 0, Math.PI*2);
                     ctxNTC.fill();
                 }
             }
 
-            const velocidade = 1 + intensidadeCalor * 4;
+            const velocidade = 1 + intensidade * 4;
             particulas.forEach(p => {
-                p.x += p.vx * velocidade;
-                p.y += p.vy * velocidade;
-                
+                p.x += p.vx * velocidade; p.y += p.vy * velocidade;
                 if (p.x < 0 || p.x > canvasNTC.width) p.vx *= -1;
                 if (p.y < 0 || p.y > canvasNTC.height) p.vy *= -1;
-
-                ctxNTC.fillStyle = '#FFD700';
-                ctxNTC.shadowColor = '#FFD700';
-                ctxNTC.shadowBlur = 10;
-                ctxNTC.beginPath();
-                ctxNTC.arc(p.x, p.y, p.raio, 0, Math.PI * 2);
-                ctxNTC.fill();
+                ctxNTC.fillStyle = '#FFD700'; ctxNTC.shadowColor = '#FFD700'; ctxNTC.shadowBlur = 10;
+                ctxNTC.beginPath(); ctxNTC.arc(p.x, p.y, p.raio, 0, Math.PI*2); ctxNTC.fill();
                 ctxNTC.shadowBlur = 0;
             });
 
-            ctxNTC.fillStyle = 'rgba(0,0,0,0.8)';
-            ctxNTC.fillRect(10, 10, 220, 60);
-            ctxNTC.fillStyle = 'white';
-            ctxNTC.font = 'bold 14px sans-serif';
+            ctxNTC.fillStyle = 'rgba(0,0,0,0.8)'; ctxNTC.fillRect(10, 10, 220, 60);
+            ctxNTC.fillStyle = 'white'; ctxNTC.font = 'bold 14px sans-serif';
             ctxNTC.fillText(`Temperatura: ${temperaturaNTC}°C`, 20, 30);
             ctxNTC.font = '12px sans-serif';
             ctxNTC.fillText('● Amarelo = elétrons livres', 20, 50);
-            ctxNTC.fillText('● Escuro = átomos da rede', 20, 65);
-
             requestAnimationFrame(desenharNTC);
         }
-
-        sliderTempNTC.addEventListener('input', (e) => {
+        document.getElementById('sliderTempNTC').addEventListener('input', (e) => {
             temperaturaNTC = parseInt(e.target.value);
-            valorTempNTC.textContent = temperaturaNTC + '°C';
+            document.getElementById('valorTempNTC').textContent = temperaturaNTC + '°C';
             e.target.setAttribute('aria-valuenow', temperaturaNTC);
         });
-
         desenharNTC();
 
-        /* ============================================
-           SIMULADOR 2: COMPARAÇÃO DE SENSORES
-           ============================================ */
+        // 2. Comparação
         const canvasComp = document.getElementById('canvasComparacao');
         const ctxComp = canvasComp.getContext('2d');
-        const sliderTempReal = document.getElementById('sliderTempReal');
-        const valorTempReal = document.getElementById('valorTempReal');
-
         let tempReal = 25;
         let sensores = [
             { nome: 'Sensor Lento (Baixa Resolução)', leitura: 25, precisao: 1.0, inercia: 0.02, cor: '#f44336' },
@@ -1604,240 +829,135 @@
 
         function desenharComparacao() {
             ctxComp.clearRect(0, 0, canvasComp.width, canvasComp.height);
-            ctxComp.fillStyle = '#f8f9fa';
-            ctxComp.fillRect(0, 0, canvasComp.width, canvasComp.height);
+            ctxComp.fillStyle = '#f8f9fa'; ctxComp.fillRect(0, 0, canvasComp.width, canvasComp.height);
 
             sensores.forEach((s, i) => {
                 s.leitura += (tempReal - s.leitura) * s.inercia;
                 const leituraArred = Math.round(s.leitura / s.precisao) * s.precisao;
-                
                 const y = 60 + i * 80;
                 
-                ctxComp.fillStyle = '#e0e0e0';
-                ctxComp.fillRect(250, y, 300, 40);
+                ctxComp.fillStyle = '#e0e0e0'; ctxComp.fillRect(250, y, 300, 40);
+                ctxComp.fillStyle = s.cor; ctxComp.fillRect(250, y, Math.max(0, ((leituraArred - 10) / 35) * 300), 40);
                 
-                const largura = ((leituraArred - 10) / 35) * 300;
-                ctxComp.fillStyle = s.cor;
-                ctxComp.fillRect(250, y, Math.max(0, largura), 40);
-                
-                ctxComp.fillStyle = '#212529';
-                ctxComp.font = 'bold 13px sans-serif';
-                ctxComp.textAlign = 'left';
+                ctxComp.fillStyle = '#212529'; ctxComp.font = 'bold 13px sans-serif'; ctxComp.textAlign = 'left';
                 ctxComp.fillText(s.nome, 10, y + 25);
-                
-                ctxComp.fillStyle = 'white';
-                ctxComp.font = 'bold 16px sans-serif';
-                ctxComp.textAlign = 'center';
+                ctxComp.fillStyle = 'white'; ctxComp.font = 'bold 16px sans-serif'; ctxComp.textAlign = 'center';
                 ctxComp.fillText(leituraArred.toFixed(1) + '°C', 400, y + 26);
             });
 
             const xReal = 250 + ((tempReal - 10) / 35) * 300;
-            ctxComp.strokeStyle = '#000';
-            ctxComp.lineWidth = 2;
-            ctxComp.setLineDash([5, 5]);
-            ctxComp.beginPath();
-            ctxComp.moveTo(xReal, 40);
-            ctxComp.lineTo(xReal, 280);
-            ctxComp.stroke();
+            ctxComp.strokeStyle = '#000'; ctxComp.lineWidth = 2; ctxComp.setLineDash([5, 5]);
+            ctxComp.beginPath(); ctxComp.moveTo(xReal, 40); ctxComp.lineTo(xReal, 280); ctxComp.stroke();
             ctxComp.setLineDash([]);
-            
-            ctxComp.fillStyle = '#000';
-            ctxComp.font = 'bold 12px sans-serif';
-            ctxComp.textAlign = 'center';
+            ctxComp.fillStyle = '#000'; ctxComp.font = 'bold 12px sans-serif'; ctxComp.textAlign = 'center';
             ctxComp.fillText('TEMPERATURA REAL', xReal, 35);
-
-            ctxComp.fillStyle = '#666';
-            ctxComp.font = '11px sans-serif';
-            ctxComp.textAlign = 'center';
+            
+            ctxComp.fillStyle = '#666'; ctxComp.font = '11px sans-serif';
             for (let t = 10; t <= 45; t += 5) {
-                const x = 250 + ((t - 10) / 35) * 300;
-                ctxComp.fillText(t + '°C', x, 295);
+                ctxComp.fillText(t + '°C', 250 + ((t - 10) / 35) * 300, 295);
             }
-
             requestAnimationFrame(desenharComparacao);
         }
-
-        sliderTempReal.addEventListener('input', (e) => {
+        document.getElementById('sliderTempReal').addEventListener('input', (e) => {
             tempReal = parseFloat(e.target.value);
-            valorTempReal.textContent = tempReal.toFixed(1) + '°C';
+            document.getElementById('valorTempReal').textContent = tempReal.toFixed(1) + '°C';
             e.target.setAttribute('aria-valuenow', tempReal);
         });
-
         desenharComparacao();
 
-        /* ============================================
-           SIMULADOR 3: ESTRATIFICAÇÃO DA PISCINA
-           ============================================ */
+        // 3. Piscina
         const canvasPiscina = document.getElementById('canvasPiscina');
         const ctxPiscina = canvasPiscina.getContext('2d');
-        const sliderSol = document.getElementById('sliderSol');
-        const sliderBomba = document.getElementById('sliderBomba');
-        const valorSol = document.getElementById('valorSol');
-        const valorBomba = document.getElementById('valorBomba');
-
-        let intensidadeSol = 70;
-        let forcaBomba = 0;
-        let camadas = [];
-        const NUM_CAMADAS = 10;
-
-        for (let i = 0; i < NUM_CAMADAS; i++) {
-            camadas.push(22);
-        }
+        let intensidadeSol = 70, forcaBomba = 0;
+        let camadas = Array(10).fill(22);
 
         function desenharPiscina() {
             ctxPiscina.clearRect(0, 0, canvasPiscina.width, canvasPiscina.height);
-
+            const brilho = intensidadeSol / 100;
+            
+            // Céu e Sol
             const gradCeu = ctxPiscina.createLinearGradient(0, 0, 0, 100);
-            const brilhoSol = intensidadeSol / 100;
-            gradCeu.addColorStop(0, `rgb(${135 + brilhoSol*50}, ${206 + brilhoSol*30}, ${235})`);
-            gradCeu.addColorStop(1, `rgb(${200 + brilhoSol*55}, ${230}, ${255})`);
-            ctxPiscina.fillStyle = gradCeu;
-            ctxPiscina.fillRect(0, 0, canvasPiscina.width, 100);
-
-            const raioSol = 30 + brilhoSol * 20;
-            ctxPiscina.fillStyle = `rgba(255, ${180 + brilhoSol*75}, 0, ${0.5 + brilhoSol*0.5})`;
-            ctxPiscina.shadowColor = '#FFD700';
-            ctxPiscina.shadowBlur = 30 * brilhoSol;
-            ctxPiscina.beginPath();
-            ctxPiscina.arc(100, 60, raioSol, 0, Math.PI * 2);
-            ctxPiscina.fill();
+            gradCeu.addColorStop(0, `rgb(${135 + brilho*50}, ${206 + brilho*30}, ${235})`);
+            gradCeu.addColorStop(1, `rgb(${200 + brilho*55}, 230, 255)`);
+            ctxPiscina.fillStyle = gradCeu; ctxPiscina.fillRect(0, 0, canvasPiscina.width, 100);
+            
+            ctxPiscina.fillStyle = `rgba(255, ${180 + brilho*75}, 0, ${0.5 + brilho*0.5})`;
+            ctxPiscina.shadowColor = '#FFD700'; ctxPiscina.shadowBlur = 30 * brilho;
+            ctxPiscina.beginPath(); ctxPiscina.arc(100, 60, 30 + brilho*20, 0, Math.PI*2); ctxPiscina.fill();
             ctxPiscina.shadowBlur = 0;
 
-            if (brilhoSol > 0.2) {
-                ctxPiscina.strokeStyle = `rgba(255, 200, 0, ${brilhoSol * 0.5})`;
-                ctxPiscina.lineWidth = 2;
-                for (let i = 0; i < 8; i++) {
-                    const angulo = (i / 8) * Math.PI * 2;
-                    ctxPiscina.beginPath();
-                    ctxPiscina.moveTo(100 + Math.cos(angulo) * (raioSol + 5), 60 + Math.sin(angulo) * (raioSol + 5));
-                    ctxPiscina.lineTo(100 + Math.cos(angulo) * (raioSol + 20), 60 + Math.sin(angulo) * (raioSol + 20));
-                    ctxPiscina.stroke();
-                }
-            }
-
+            // Piscina
             ctxPiscina.fillStyle = '#8B4513';
-            ctxPiscina.fillRect(100, 100, 500, 20);
-            ctxPiscina.fillRect(100, 100, 20, 280);
-            ctxPiscina.fillRect(580, 100, 20, 280);
-            ctxPiscina.fillRect(100, 380, 500, 20);
+            ctxPiscina.fillRect(100, 100, 500, 20); ctxPiscina.fillRect(100, 100, 20, 280);
+            ctxPiscina.fillRect(580, 100, 20, 280); ctxPiscina.fillRect(100, 380, 500, 20);
 
-            const alturaCamada = 260 / NUM_CAMADAS;
-            for (let i = 0; i < NUM_CAMADAS; i++) {
-                const temp = camadas[i];
-                const t = Math.max(0, Math.min(1, (temp - 15) / 25));
-                const r = Math.floor(50 + t * 200);
-                const g = Math.floor(100 + (1 - Math.abs(t - 0.5) * 2) * 100);
-                const b = Math.floor(220 - t * 180);
-                ctxPiscina.fillStyle = `rgb(${r}, ${g}, ${b})`;
-                ctxPiscina.fillRect(120, 120 + i * alturaCamada, 460, alturaCamada);
-
-                ctxPiscina.fillStyle = 'white';
-                ctxPiscina.font = 'bold 11px sans-serif';
-                ctxPiscina.textAlign = 'right';
-                ctxPiscina.fillText(temp.toFixed(1) + '°C', 570, 120 + i * alturaCamada + alturaCamada/2 + 4);
+            const altCamada = 260 / 10;
+            for (let i = 0; i < 10; i++) {
+                const t = Math.max(0, Math.min(1, (camadas[i] - 15) / 25));
+                ctxPiscina.fillStyle = `rgb(${50 + t*200}, ${100 + (1 - Math.abs(t - 0.5)*2)*100}, ${220 - t*180})`;
+                ctxPiscina.fillRect(120, 120 + i * altCamada, 460, altCamada);
+                ctxPiscina.fillStyle = 'white'; ctxPiscina.font = 'bold 11px sans-serif'; ctxPiscina.textAlign = 'right';
+                ctxPiscina.fillText(camadas[i].toFixed(1) + '°C', 570, 120 + i * altCamada + altCamada/2 + 4);
             }
 
-            const aquecimento = intensidadeSol * 0.0003;
-            camadas[0] += aquecimento;
-            
-            const perda = 0.001;
-            camadas.forEach((t, i) => {
-                camadas[i] -= perda * (1 - i/NUM_CAMADAS) * (t - 15);
-            });
-
-            for (let i = NUM_CAMADAS - 1; i > 0; i--) {
+            // Física
+            camadas[0] += intensidadeSol * 0.0003;
+            camadas.forEach((temp, i) => { camadas[i] -= 0.001 * (1 - i/10) * (temp - 15); });
+            for (let i = 9; i > 0; i--) {
                 if (camadas[i] > camadas[i-1] + 0.1) {
                     const diff = (camadas[i] - camadas[i-1]) * 0.01;
-                    camadas[i] -= diff;
-                    camadas[i-1] += diff;
+                    camadas[i] -= diff; camadas[i-1] += diff;
                 }
             }
-
             if (forcaBomba > 0) {
-                const mistura = forcaBomba * 0.005;
-                let media = camadas.reduce((a, b) => a + b, 0) / NUM_CAMADAS;
-                camadas.forEach((t, i) => {
-                    camadas[i] += (media - t) * mistura;
-                });
+                const media = camadas.reduce((a, b) => a + b, 0) / 10;
+                camadas = camadas.map(t => t + (media - t) * forcaBomba * 0.005);
             }
-
             camadas = camadas.map(t => Math.max(10, Math.min(45, t)));
 
+            // Bomba
             if (forcaBomba > 0) {
-                ctxPiscina.fillStyle = '#333';
-                ctxPiscina.fillRect(60, 200, 40, 60);
-                ctxPiscina.fillStyle = '#FF9F1C';
-                const rotacao = Date.now() / 100 * forcaBomba / 100;
-                ctxPiscina.save();
-                ctxPiscina.translate(80, 230);
-                ctxPiscina.rotate(rotacao);
-                ctxPiscina.fillRect(-15, -3, 30, 6);
-                ctxPiscina.fillRect(-3, -15, 6, 30);
+                ctxPiscina.fillStyle = '#333'; ctxPiscina.fillRect(60, 200, 40, 60);
+                ctxPiscina.fillStyle = '#FF9F1C'; ctxPiscina.save(); ctxPiscina.translate(80, 230);
+                ctxPiscina.rotate(Date.now() / 100 * forcaBomba / 100);
+                ctxPiscina.fillRect(-15, -3, 30, 6); ctxPiscina.fillRect(-3, -15, 6, 30);
                 ctxPiscina.restore();
-                
-                ctxPiscina.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-                ctxPiscina.lineWidth = 2;
-                const t = Date.now() / 500;
-                for (let i = 0; i < 3; i++) {
-                    const y = 150 + ((t * 30 + i * 80) % 240);
-                    ctxPiscina.beginPath();
-                    ctxPiscina.moveTo(150, y);
-                    ctxPiscina.lineTo(180, y);
-                    ctxPiscina.lineTo(175, y - 5);
-                    ctxPiscina.moveTo(180, y);
-                    ctxPiscina.lineTo(175, y + 5);
-                    ctxPiscina.stroke();
-                }
             }
 
-            const posicoesSensores = [0, Math.floor(NUM_CAMADAS/2), NUM_CAMADAS - 1];
-            const labelsSensores = ['Sup', 'Meio', 'Fun'];
-            posicoesSensores.forEach((pos, idx) => {
-                const y = 120 + pos * alturaCamada + alturaCamada/2;
-                ctxPiscina.fillStyle = '#000';
-                ctxPiscina.fillRect(130, y - 5, 10, 10);
-                ctxPiscina.fillStyle = 'white';
-                ctxPiscina.font = 'bold 10px sans-serif';
-                ctxPiscina.textAlign = 'left';
-                ctxPiscina.fillText(labelsSensores[idx], 145, y + 3);
+            // Sensores
+            [0, 4, 9].forEach((pos, idx) => {
+                const y = 120 + pos * altCamada + altCamada/2;
+                ctxPiscina.fillStyle = '#000'; ctxPiscina.fillRect(130, y - 5, 10, 10);
+                ctxPiscina.fillStyle = 'white'; ctxPiscina.font = 'bold 10px sans-serif'; ctxPiscina.textAlign = 'left';
+                ctxPiscina.fillText(['Sup', 'Meio', 'Fun'][idx], 145, y + 3);
             });
 
-            ctxPiscina.fillStyle = 'rgba(0,0,0,0.7)';
-            ctxPiscina.fillRect(10, 10, 180, 80);
-            ctxPiscina.fillStyle = 'white';
-            ctxPiscina.font = 'bold 12px sans-serif';
-            ctxPiscina.textAlign = 'left';
-            ctxPiscina.fillText('🌡️ Sensores:', 20, 30);
+            ctxPiscina.fillStyle = 'rgba(0,0,0,0.7)'; ctxPiscina.fillRect(10, 10, 180, 80);
+            ctxPiscina.fillStyle = 'white'; ctxPiscina.font = 'bold 12px sans-serif'; ctxPiscina.textAlign = 'left';
+            ctxPiscina.fillText('🌡️ Sensores da Piscina:', 20, 30);
             ctxPiscina.font = '11px sans-serif';
             ctxPiscina.fillText(`Sup: ${camadas[0].toFixed(1)}°C`, 20, 50);
-            ctxPiscina.fillText(`Meio: ${camadas[Math.floor(NUM_CAMADAS/2)].toFixed(1)}°C`, 20, 65);
-            ctxPiscina.fillText(`Fundo: ${camadas[NUM_CAMADAS-1].toFixed(1)}°C`, 20, 80);
+            ctxPiscina.fillText(`Meio: ${camadas[4].toFixed(1)}°C`, 20, 65);
+            ctxPiscina.fillText(`Fundo: ${camadas[9].toFixed(1)}°C`, 20, 80);
 
             requestAnimationFrame(desenharPiscina);
         }
-
-        sliderSol.addEventListener('input', (e) => {
+        document.getElementById('sliderSol').addEventListener('input', (e) => {
             intensidadeSol = parseInt(e.target.value);
-            valorSol.textContent = intensidadeSol + '%';
+            document.getElementById('valorSol').textContent = intensidadeSol + '%';
             e.target.setAttribute('aria-valuenow', intensidadeSol);
         });
-
-        sliderBomba.addEventListener('input', (e) => {
+        document.getElementById('sliderBomba').addEventListener('input', (e) => {
             forcaBomba = parseInt(e.target.value);
-            valorBomba.textContent = forcaBomba === 0 ? 'Desligada' : forcaBomba + '%';
+            document.getElementById('valorBomba').textContent = forcaBomba === 0 ? 'Desligada' : forcaBomba + '%';
             e.target.setAttribute('aria-valuenow', forcaBomba);
         });
-
         function resetarSimulador() {
-            camadas = camadas.map(() => 22);
-            sliderSol.value = 70;
-            sliderBomba.value = 0;
-            intensidadeSol = 70;
-            forcaBomba = 0;
-            valorSol.textContent = '70%';
-            valorBomba.textContent = 'Desligada';
+            camadas = Array(10).fill(22);
+            intensidadeSol = 70; forcaBomba = 0;
+            document.getElementById('sliderSol').value = 70; document.getElementById('sliderBomba').value = 0;
+            document.getElementById('valorSol').textContent = '70%'; document.getElementById('valorBomba').textContent = 'Desligada';
         }
-
         desenharPiscina();
     </script>
 </body>
